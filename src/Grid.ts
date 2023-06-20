@@ -9,9 +9,9 @@ class Grid extends Phaser.GameObjects.GameObject
     public blocks: Vector2[]
     public corners: Vector2[]
     private blockFlags: boolean[][] = []
-    private cellSize: number = 50
-    private line: Line
-    private arc: Arc
+    private cellSize: number = 10
+    private lines: Line[] = []
+    private arcs: Arc[] = []
 
     constructor(scene: Scene, size: Vector2, blocks: Vector2[], corners: Vector2[]) {
         super(scene, '')
@@ -34,27 +34,18 @@ class Grid extends Phaser.GameObjects.GameObject
         }
 
         this.draw()
-        this.line = this.scene.add.line(0, 0, 0, 0, 0, 0, 0xffffff).setOrigin(0, 0)
-        this.line.depth = 100
-
-        const grid = this.scene.add.grid(0, 0, 600, 600, this.cellSize, this.cellSize, 0x111111)
-        grid.depth = -100
-        grid.setOrigin(0, 0)
-
-        this.arc = this.scene.add.arc(0, 0, 5, 0, 359, false, 0xff0000)
-        this.arc.depth = 1000
     }
 
     public draw(): void {
+        const grid = this.scene.add.grid(0, 0, 1000, 1000, this.cellSize, this.cellSize, 0x111111)
+        grid.depth = -100
+        grid.setOrigin(0, 0)
+
         this.blocks.forEach((block) => {
             this.scene.add.rectangle((block.x + 0.5) * this.cellSize, (block.y + 0.5) * this.cellSize, this.cellSize, this.cellSize, 0xeeeeee)
         })
     }
-
-    public update(mousePos: Vector2) {
-        if (this.raycast(new Vector2(6, 6), mousePos.scale(1 / this.cellSize).subtract(new Vector2(6, 6)).normalize())) console.log("yes")
-        else console.log('no')
-    }
+    
 
     public raycast(start: Vector2, direction: Vector2): Vector2 | null {
         const unitStepSize = new Vector2(
@@ -114,20 +105,30 @@ class Grid extends Phaser.GameObjects.GameObject
                     const s = new Vector2(start.x, start.y)
                     const result = start.add(direction.scale(distance))
                     console.log(result)
-                    this.arc.x = result.x * this.cellSize
-                    this.arc.y = result.y * this.cellSize
-                    this.line.setTo(s.x * this.cellSize, s.y * this.cellSize, result.x * this.cellSize, result.y * this.cellSize)
+
+                    this.drawRay(new Vector2(s.x * this.cellSize, s.y * this.cellSize), new Vector2(result.x * this.cellSize, result.y * this.cellSize))
                     return result
                 }
             }
             else break
         }
 
-        this.line.setTo(start.x * this.cellSize, start.y * this.cellSize, (direction.x * 1000 + start.x) * this.cellSize, (direction.y * 1000 + start.y) * this.cellSize)
+        this.drawRay(new Vector2(start.x * this.cellSize, start.y * this.cellSize), new Vector2((direction.x * 1000 + start.x) * this.cellSize, (direction.y * 1000 + start.y) * this.cellSize))
         console.log(a)
-        this.arc.x = 100000
-        this.arc.y = 1000000
         return null
+    }
+
+    private drawRay(start: Vector2, end: Vector2) {
+        this.lines.push(this.scene.add.line(0, 0, start.x, start.y, end.x, end.y, 0xffffff).setOrigin(0, 0))
+        this.lines[this.lines.length - 1].depth = 100
+
+        this.arcs.push(this.scene.add.arc(end.x, end.y, 5, 0, 359, false, 0xff0000))
+        this.arcs[this.arcs.length - 1].depth = 1000
+    }
+
+    public removeAllRays() {
+        this.lines.forEach((line) => line.destroy())
+        this.arcs.forEach((arc) => arc.destroy())
     }
 }
 

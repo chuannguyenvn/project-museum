@@ -3,13 +3,13 @@ import Light from "./Light"
 import Grid from "./Grid"
 import Vector2 = Phaser.Math.Vector2
 
-class Game extends Phaser.Scene
+class GameScene extends Phaser.Scene
 {
     private readonly CELL_SIZE: number = 100
     private cat: Phaser.GameObjects.Sprite
     private light: Light
-    private grid: Grid
-    
+    public grid: Grid
+
     preload(): void {
         this.load.image('cat', 'assets/cat.jpg')
         this.load.image('light', 'assets/light.png')
@@ -22,19 +22,28 @@ class Game extends Phaser.Scene
         // this.light = new Light(this)
         // this.input.on('pointermove', this.light.moveToCursor, this.light)
 
-        this.grid = new Grid(this, new Vector2(10, 10), [new Vector2(1, 1), new Vector2(1, 5), new Vector2(3, 7), new Vector2(9, 2)], [])
+        const blocks = []
+        for (let i = 0; i < 500; i++)
+        {
+            blocks.push(new Vector2(Math.round(Math.random() * 100), Math.round(Math.random() * 100)))
+        }
+
+        this.grid = new Grid(this, new Vector2(1000, 1000), blocks, [])
+        this.light = new Light(this)
     }
-    
+
     update(time: number, delta: number) {
         super.update(time, delta)
-        this.grid.update(new Vector2(this.input.mousePointer.x, this.input.mousePointer.y))
+        this.light.update(new Vector2(this.input.mousePointer.x, this.input.mousePointer.y))
     }
 }
 
+export default GameScene
+
 const config = {
     type: Phaser.AUTO,
-    width: 600,
-    height: 600,
+    width: 1000,
+    height: 1000,
     fps: {target: 60},
     backgroundColor: "eeeeee",
     physics: {
@@ -45,7 +54,7 @@ const config = {
 
         }
     },
-    scene: [Game]
+    scene: [GameScene]
 }
 
 const game = new Phaser.Game(config)
