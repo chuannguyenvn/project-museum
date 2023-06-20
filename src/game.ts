@@ -14,27 +14,9 @@ class Game extends Phaser.Scene
 
     create(): void {
         this.cat = this.add.sprite(0, 0, 'cat')
-
         this.cat.setOrigin(0, 0)
-        this.add.text(50, 50, "AAAAA")
-
-        const overlay = this.add.graphics()
-
-        overlay.fillStyle(0x000000, 0.8).fillRect(0, 0, 800, 600)
-
-        const maskGraphics = this.make.graphics()
-
-        maskGraphics.fillStyle(0xffffff)
-        maskGraphics.fillRect(100, 100, 256, 256)
-
-        const mask = new Phaser.Display.Masks.BitmapMask(this, maskGraphics)
-
-        mask.invertAlpha = true
-
-        overlay.setMask(mask)
 
         this.light = new Light(this)
-
         this.input.on('pointermove', this.light.moveToCursor, this.light)
     }
     
