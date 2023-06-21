@@ -3,7 +3,7 @@ import Vector2 = Phaser.Math.Vector2
 import Polygon = Phaser.GameObjects.Polygon
 import PlayScene from "../scenes/PlayScene"
 import GameObjectType from "../configs/GameObjectType"
-import Constants from "../configs/constants"
+import Constants from "../configs/Constants"
 import IVectorLike from "../interfaces/IVectorLike"
 import Convert from "../utilities/Convert"
 import query from "../utilities/Query"

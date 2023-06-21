@@ -4,8 +4,7 @@ import JsonKey from "../configs/JsonKey"
 
 class GameManager
 {
-    public static GetCurrentLevel(): ILevelData
-    {
+    public static GetCurrentLevel(): ILevelData {
         return FileLookUp[JsonKey.LEVEL_DATA][0] as ILevelData
     }
 }

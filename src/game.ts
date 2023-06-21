@@ -1,5 +1,5 @@
-import GAME_CONFIG from "./configs/config"
-import Phaser from "phaser";
+import GAME_CONFIG from "./configs/Config"
+import Phaser from "phaser"
 
 export class Game extends Phaser.Game
 {
