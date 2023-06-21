@@ -71,31 +71,63 @@ class SpotLight extends Sprite
                 const cornerDirection = (corner.clone().subtract(new Vector2(this.x, this.y))).normalize()
                 const deltaAngle = Maths.DegreeAngleBetween(
                     new Vector2(this.direction.x, this.direction.y), cornerDirection)
-                
+
                 return Math.abs(deltaAngle) < Constants.LIGHT_SPREAD_ANGLE / 2
             })
             .toArray()
-        
+
         let lightPolygonPath = []
         const normalizedLightPosition = new Vector2(this.x / Constants.CELL_SIZE, this.y / Constants.CELL_SIZE)
         for (let i = 0; i < cornersInRange.length; i++)
         {
-            const normalizedDirection = new Vector2(cornersInRange[i].x - this.x, cornersInRange[i].y - this.y).normalize()
-            lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), normalizedDirection))
+            const currentCorner = cornersInRange[i]
+            const nextCorner = cornersInRange[(i + 1) % cornersInRange.length]
+            const offset = 0.01
+
+            // Corner points are always counter-clockwise ordered
+
+            // Changing y means 
+            //  _| or  _
+            //        |
+            // => Raycast to NW and SE of point
+            if (currentCorner.y === nextCorner.y)
+            {
+                const nwRaycastTarget = new Vector2(currentCorner.x - this.x - offset, currentCorner.y - this.y - offset).normalize()
+                const seRaycastTarget = new Vector2(currentCorner.x - this.x + offset, currentCorner.y - this.y + offset).normalize()
+
+                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), nwRaycastTarget))
+                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), seRaycastTarget))
+            }
+
+            // Changing x means
+            //  |_ or  _
+            //          |
+            // => Raycast to NE and SW of point
+            else
+            {
+                const neRaycastTarget = new Vector2(currentCorner.x - this.x + offset, currentCorner.y - this.y - offset).normalize()
+                const swRaycastTarget = new Vector2(currentCorner.x - this.x - offset, currentCorner.y - this.y + offset).normalize()
+
+                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), neRaycastTarget))
+                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), swRaycastTarget))
+            }
         }
 
         lightPolygonPath.push(new Vector2(this.x, this.y))
         lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
         lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(-Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
-        
+
         lightPolygonPath = query(lightPolygonPath)
             .select(Convert.ToVector2)
             .orderByAscending((point) => point.clone().subtract(new Vector2(this.x, this.y)).angle())
             .toArray()
-        
+
+        console.log(lightPolygonPath)
+
         if (this.lightPolygon) this.lightPolygon.destroy()
-        this.lightPolygon = this.scene.add.polygon(0, 0, lightPolygonPath, 0xffffff)
+        this.lightPolygon = this.scene.add.polygon(0, 0, lightPolygonPath, 0xeeeeee)
         this.lightPolygon.setOrigin(0, 0)
+        this.lightPolygon.setAlpha(0.5)
     }
 
     public raycast(normalizedStart: Vector2, normalizedDirection: Vector2): Vector2 {
@@ -105,7 +137,7 @@ class SpotLight extends Sprite
 
         const currentFlagCoord = new Vector2(Math.floor(normalizedStart.x), Math.floor(normalizedStart.y))
         const flagStep = new Vector2(0, 0)
-        let raySoFar = new Vector2(0, 0)
+        const raySoFar = new Vector2(0, 0)
 
         if (normalizedDirection.x > 0)
         {
@@ -131,7 +163,6 @@ class SpotLight extends Sprite
 
         let distance = 0
         const maxDistance = 10000
-        let a = ""
         while (raySoFar.x < maxDistance && raySoFar.y < maxDistance)
         {
             if (raySoFar.x < raySoFar.y)
@@ -147,7 +178,6 @@ class SpotLight extends Sprite
                 raySoFar.y += unitStepSize.y
             }
 
-            a += `[${currentFlagCoord.x}, ${currentFlagCoord.y}]`
             if (currentFlagCoord.x >= 0 && currentFlagCoord.x < this.scene.currentLevel.levelSize.x &&
                 currentFlagCoord.y >= 0 && currentFlagCoord.y < this.scene.currentLevel.levelSize.y)
             {
