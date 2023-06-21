@@ -1,7 +1,6 @@
-﻿import JsonKey from "../configs/JsonKey"
-import FileLookUp from "../configs/FileLookUp"
-import JsonHelper from "../utilities/JsonHelper"
-import ILevelData from "../interfaces/ILevelData"
+﻿import Wall from "../objects/Wall"
+import GameManager from "../managers/GameManager"
+import Vector2 = Phaser.Math.Vector2
 
 class PlayScene extends Phaser.Scene
 {
@@ -11,12 +10,14 @@ class PlayScene extends Phaser.Scene
         })
     }
 
+    private preload(): void {
+    }
+
     private create(): void {
-        const levelDataArray = FileLookUp[JsonKey.LEVEL_DATA] as ILevelData[]
-        
-        for (let i = 0; i <levelDataArray.length; i++)
+        const currentLevel = GameManager.GetCurrentLevel()
+        for (let i = 0; i < currentLevel.wallLayout.length; i++)
         {
-            console.log(levelDataArray[i].levelNumber)
+            new Wall(this, new Vector2(currentLevel.wallLayout[i].x, currentLevel.wallLayout[i].y))
         }
     }
 }
