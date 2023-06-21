@@ -16,8 +16,8 @@ class Light extends GameObject
     }
 
     public update(mousePosition: Vector2): void {
-        // console.log(mousePosition)
-        this.raycast(new Vector2(5, 5), (mousePosition.scale(1 / Constants.CELL_SIZE).subtract(new Vector2(5, 5))).normalize())
+        const startPos = new Vector2(5, 5)
+        this.raycast(startPos.clone(), (mousePosition.clone().scale(1 / Constants.CELL_SIZE).subtract(startPos.clone())).normalize())
     }
 
     public raycast(startNormalized: Vector2, directionNormalized: Vector2): Vector2 | null {
@@ -82,12 +82,12 @@ class Light extends GameObject
 
                     this.drawRay(
                         new Vector2(
-                            s.x * Constants.CELL_SIZE, 
-                            s.y * Constants.CELL_SIZE), 
+                            s.x * Constants.CELL_SIZE,
+                            s.y * Constants.CELL_SIZE),
                         new Vector2(
-                            result.x * Constants.CELL_SIZE, 
+                            result.x * Constants.CELL_SIZE,
                             result.y * Constants.CELL_SIZE))
-                    
+
                     return result
                 }
             }
@@ -97,11 +97,11 @@ class Light extends GameObject
         this.drawRay(
             new Vector2(
                 startNormalized.x * Constants.CELL_SIZE,
-                startNormalized.y * Constants.CELL_SIZE), 
+                startNormalized.y * Constants.CELL_SIZE),
             new Vector2(
-                (directionNormalized.x * 1000 + startNormalized.x) * Constants.CELL_SIZE, 
+                (directionNormalized.x * 1000 + startNormalized.x) * Constants.CELL_SIZE,
                 (directionNormalized.y * 1000 + startNormalized.y) * Constants.CELL_SIZE))
-        
+
         // console.log(a)
         return null
     }

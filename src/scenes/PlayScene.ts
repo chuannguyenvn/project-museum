@@ -51,8 +51,14 @@ class PlayScene extends Phaser.Scene
         console.log(this.blockFlags)
 
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () =>
-            this.light.update(this.input.mousePointer.position)
+            this.light.update(this.input.activePointer.position)
         )
+    }
+    
+    update(time: number, delta: number) {
+        super.update(time, delta)
+
+        console.log(this.input.activePointer.position)
     }
 }
 
