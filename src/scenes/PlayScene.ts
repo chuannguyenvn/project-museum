@@ -1,4 +1,4 @@
-﻿import Wall from "../objects/Wall"
+﻿import WallBlock from "../objects/WallBlock"
 import GameManager from "../managers/GameManager"
 import Vector2 = Phaser.Math.Vector2
 
@@ -15,9 +15,10 @@ class PlayScene extends Phaser.Scene
 
     private create(): void {
         const currentLevel = GameManager.GetCurrentLevel()
+        console.log(currentLevel)
         for (let i = 0; i < currentLevel.wallLayout.length; i++)
         {
-            new Wall(this, new Vector2(currentLevel.wallLayout[i].x, currentLevel.wallLayout[i].y))
+            new WallBlock(this, currentLevel.wallLayout[i], currentLevel.cornerLayout[i])
         }
     }
 }

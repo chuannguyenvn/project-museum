@@ -1,14 +1,11 @@
-﻿interface ILevelData
+﻿import IVectorLike from "./IVectorLike"
+
+interface ILevelData
 {
     levelNumber: number
     levelSize: IVectorLike
-    wallLayout: IVectorLike[]
-}
-
-interface IVectorLike
-{
-    x: number,
-    y: number
+    wallLayout: IVectorLike[][]
+    cornerLayout: IVectorLike[][]
 }
 
 export default ILevelData
