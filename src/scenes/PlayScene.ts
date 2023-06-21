@@ -2,12 +2,16 @@
 import GameManager from "../managers/GameManager"
 import ILevelData from "../interfaces/ILevelData"
 import Light from "../objects/Light"
+import SpriteKey from "../configs/SpriteKey"
+import FileLookUp from "../configs/FileLookUp"
+import Vector2 = Phaser.Math.Vector2
 
 class PlayScene extends Phaser.Scene
 {
     public currentLevel: ILevelData
 
     public allBlocks: WallBlock[]
+    public allWorldCorners: Vector2[]
     public blockFlags: boolean[][]
 
     public light: Light
@@ -19,6 +23,7 @@ class PlayScene extends Phaser.Scene
     }
 
     private preload(): void {
+        this.load.image(SpriteKey.LIGHT, FileLookUp[SpriteKey.LIGHT])
     }
 
     private create(): void {
@@ -26,6 +31,7 @@ class PlayScene extends Phaser.Scene
         this.currentLevel = GameManager.GetCurrentLevel()
 
         this.allBlocks = []
+        this.allWorldCorners = []
         this.blockFlags = []
 
         for (let x = 0; x < this.currentLevel.levelSize.x; x++)
@@ -39,7 +45,10 @@ class PlayScene extends Phaser.Scene
 
         for (let i = 0; i < this.currentLevel.wallLayout.length; i++)
         {
-            this.allBlocks.push(new WallBlock(this, this.currentLevel.wallLayout[i], this.currentLevel.cornerLayout[i]))
+            const wallBlock = new WallBlock(this, this.currentLevel.wallLayout[i], this.currentLevel.cornerLayout[i])
+            this.allBlocks.push(wallBlock)
+
+            this.allWorldCorners = this.allWorldCorners.concat(wallBlock.normalizedCornerPositions)
 
             for (let j = 0; j < this.currentLevel.wallLayout[i].length; j++)
             {
@@ -48,17 +57,14 @@ class PlayScene extends Phaser.Scene
             }
         }
 
-        console.log(this.blockFlags)
-
-        this.input.on(Phaser.Input.Events.POINTER_MOVE, () =>
-            this.light.update(this.input.activePointer.position)
+        this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
+                this.light.handlePointerMove(this.input.activePointer.position)
+            }
         )
-    }
-    
-    update(time: number, delta: number) {
-        super.update(time, delta)
 
-        console.log(this.input.activePointer.position)
+        this.input.on(Phaser.Input.Events.POINTER_UP, () => {
+            this.light.handlePointerUp()
+        })
     }
 }
 

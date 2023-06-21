@@ -1,27 +1,54 @@
 import Vector2 = Phaser.Math.Vector2
-import GameObject = Phaser.GameObjects.GameObject
+import Sprite = Phaser.GameObjects.Sprite
 import PlayScene from "../scenes/PlayScene"
-import GameObjectType from "../configs/GameObjectType"
 import Constants from "../configs/Constants"
+import SpriteKey from "../configs/SpriteKey"
+import StateMachine from "../utilities/StateMachine"
 
-class Light extends GameObject
+class Light extends Sprite
 {
+    public stateMachine: StateMachine<LightState> = new StateMachine<LightState>(LightState.Init)
+
+    public angle: number
     public scene: PlayScene
 
     constructor(scene: PlayScene) {
-        super(scene, GameObjectType.LIGHT)
+        super(scene, 0, 0, SpriteKey.LIGHT)
         scene.add.existing(this)
 
         this.scene = scene
+
+        this.stateMachine.changeState(LightState.Moving)
+        this.scale = 0.1
     }
 
-    public update(mousePosition: Vector2): void {
-        const startPos = new Vector2(5, 5)
-        this.raycast(startPos.clone(), (mousePosition.clone().scale(1 / Constants.CELL_SIZE).subtract(startPos.clone())).normalize())
+    public handlePointerUp(): void {
+        if (this.stateMachine.currentState === LightState.Moving)
+        {
+            this.stateMachine.changeState(LightState.Rotating)
+        }
+        else if (this.stateMachine.currentState === LightState.Rotating)
+        {
+            this.stateMachine.changeState(LightState.Idle)
+        }
+    }
+
+    public handlePointerMove(pointerPosition: Vector2): void {
+        if (this.stateMachine.currentState === LightState.Moving)
+            this.setPosition(pointerPosition.x, pointerPosition.y)
+        else if (this.stateMachine.currentState === LightState.Rotating)
+        {
+            const startPos = new Vector2(this.x / Constants.CELL_SIZE, this.y / Constants.CELL_SIZE)
+            this.raycast(startPos.clone(), (pointerPosition.clone().scale(1 / Constants.CELL_SIZE).subtract(startPos.clone())).normalize())
+        }
+    }
+
+    public castLight(): void {
+        // const cornersInRange = query(this.scene.allWorldCorners)
+        //     .where((corner) =>)
     }
 
     public raycast(startNormalized: Vector2, directionNormalized: Vector2): Vector2 | null {
-        // console.log(directionNormalized)
         const unitStepSize = new Vector2(
             Math.sqrt(1 + (directionNormalized.y / directionNormalized.x) * (directionNormalized.y / directionNormalized.x)),
             Math.sqrt(1 + (directionNormalized.x / directionNormalized.y) * (directionNormalized.x / directionNormalized.y)))
@@ -102,7 +129,6 @@ class Light extends GameObject
                 (directionNormalized.x * 1000 + startNormalized.x) * Constants.CELL_SIZE,
                 (directionNormalized.y * 1000 + startNormalized.y) * Constants.CELL_SIZE))
 
-        // console.log(a)
         return null
     }
 
@@ -110,6 +136,14 @@ class Light extends GameObject
         this.scene.add.line(0, 0, start.x, start.y, end.x, end.y, 0xffffff).setOrigin(0, 0)
         this.scene.add.arc(end.x, end.y, 5, 0, 359, false, 0xff0000)
     }
+}
+
+enum LightState
+{
+    Init,
+    Moving,
+    Rotating,
+    Idle,
 }
 
 export default Light
