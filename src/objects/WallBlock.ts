@@ -35,7 +35,7 @@ class WallBlock extends GameObject
             .select((vectorLike) => Convert.ToVector2(vectorLike).scale(Constants.CELL_SIZE))
             .toArray()
         this.worldCornerPositions = query(normalizedCornerPositions)
-            .select((vectorLike) => Convert.ToVector2(vectorLike).scale(Constants.CELL_SIZE))
+            .select((vectorLike) => Convert.ToVector2(vectorLike).add(new Vector2(0.5, -0.5)).scale(Constants.CELL_SIZE))
             .toArray()
 
         this.wallPolygon = scene.add.polygon(0, 0, this.worldCornerPositions, 0xffffff)

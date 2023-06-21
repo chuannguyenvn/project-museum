@@ -1,6 +1,7 @@
 ﻿enum GameObjectType
 {
-    WALL = 'wall'
+    WALL = 'wall',
+    LIGHT = 'light',
 }
 
 export default GameObjectType
