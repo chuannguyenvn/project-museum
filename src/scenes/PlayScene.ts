@@ -1,7 +1,7 @@
 ﻿import WallBlock from "../objects/WallBlock"
 import GameManager from "../managers/GameManager"
 import ILevelData from "../interfaces/ILevelData"
-import Light from "../objects/Light"
+import SpotLight from "../objects/SpotLight"
 import SpriteKey from "../configs/SpriteKey"
 import FileLookUp from "../configs/FileLookUp"
 import Vector2 = Phaser.Math.Vector2
@@ -14,7 +14,7 @@ class PlayScene extends Phaser.Scene
     public allWorldCorners: Vector2[]
     public blockFlags: boolean[][]
 
-    public light: Light
+    public light: SpotLight
 
     constructor() {
         super({
@@ -27,7 +27,7 @@ class PlayScene extends Phaser.Scene
     }
 
     private create(): void {
-        this.light = new Light(this)
+        this.light = new SpotLight(this)
         this.currentLevel = GameManager.GetCurrentLevel()
 
         this.allBlocks = []
@@ -48,7 +48,7 @@ class PlayScene extends Phaser.Scene
             const wallBlock = new WallBlock(this, this.currentLevel.wallLayout[i], this.currentLevel.cornerLayout[i])
             this.allBlocks.push(wallBlock)
 
-            this.allWorldCorners = this.allWorldCorners.concat(wallBlock.normalizedCornerPositions)
+            this.allWorldCorners = this.allWorldCorners.concat(wallBlock.worldCornerPositions)
 
             for (let j = 0; j < this.currentLevel.wallLayout[i].length; j++)
             {

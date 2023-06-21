@@ -1,6 +1,6 @@
 ﻿class Query<T>
 {
-    private array: T[]
+    public array: T[]
 
     constructor(array: T[]) {
         this.array = array
