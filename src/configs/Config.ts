@@ -7,6 +7,9 @@ const GAME_CONFIG: Phaser.Types.Core.GameConfig = {
     width: 960,
     height: 540,
     parent: 'game',
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+    },
     scene: [PlayScene, LevelSelectionScene],
     backgroundColor: 0x111111,
 }

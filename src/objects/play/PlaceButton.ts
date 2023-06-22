@@ -11,9 +11,6 @@ class PlaceButton extends ButtonPrefab
         this.playScene = scene
 
         this.setSize(200, 200)
-        this.setAnchor(new Vector2(0, 0.5))
-        this.setPivot(new Vector2(0, 0.5))
-        this.setOffset(new Vector2(100, 0))
     }
 }
 

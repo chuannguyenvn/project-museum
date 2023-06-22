@@ -92,7 +92,29 @@ class PlayScene extends Phaser.Scene
             this.light.handlePointerUp()
         })
 
-        new PlaceButton(this)
+        const topLeft = new PlaceButton(this)
+        topLeft.setAnchor(new Vector2(0, 0))
+        topLeft.setPivot(new Vector2(0, 0))
+        topLeft.setOffset(new Vector2(100, 100))
+
+        const topRight = new PlaceButton(this)
+        topRight.setAnchor(new Vector2(1, 0))
+        topRight.setPivot(new Vector2(1, 0))
+        topRight.setOffset(new Vector2(-100, 100))
+
+        const bottomLeft = new PlaceButton(this)
+        bottomLeft.setAnchor(new Vector2(0, 1))
+        bottomLeft.setPivot(new Vector2(0, 1))
+        bottomLeft.setOffset(new Vector2(100, -100))
+
+        const bottomRight = new PlaceButton(this)
+        bottomRight.setAnchor(new Vector2(1, 1))
+        bottomRight.setPivot(new Vector2(1, 1))
+        bottomRight.setOffset(new Vector2(-100, -100))
+
+        const center = new PlaceButton(this)
+        center.setAnchor(new Vector2(0.5, 0.5))
+        center.setPivot(new Vector2(0.5, 0.5))
     }
 }
 
