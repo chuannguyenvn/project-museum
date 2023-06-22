@@ -259,7 +259,7 @@ class SpotLight extends Sprite
                 }
 
                 const result = this.raycast(this.normalizedPosition.clone(), pointDirection)
-                if (result.subtract(point.clone()).length() > Constants.SLIGHTLY_WORSE_EPSILON)
+                if (result.clone().subtract(point.clone()).length() > Constants.SLIGHTLY_WORSE_EPSILON && result.length() < 10000)
                 {
                     allPointVisible = false
                     break

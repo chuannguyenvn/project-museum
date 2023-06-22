@@ -10,7 +10,7 @@ const GAME_CONFIG: Phaser.Types.Core.GameConfig = {
     scale: {
         mode: Phaser.Scale.RESIZE,
     },
-    scene: [PlayScene, LevelSelectionScene],
+    scene: [LevelSelectionScene, PlayScene],
     backgroundColor: 0x111111,
 }
 

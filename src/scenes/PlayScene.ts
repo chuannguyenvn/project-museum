@@ -9,6 +9,7 @@ import Convert from "../utilities/Convert"
 import Boundary from "../objects/play/Boundary"
 import Constants from "../configs/Constants"
 import PlaceButton from "../objects/play/PlaceButton"
+import SceneKey from "../configs/SceneKey"
 import Vector2 = Phaser.Math.Vector2
 import Color = Phaser.Display.Color
 
@@ -25,8 +26,12 @@ class PlayScene extends Phaser.Scene
 
     constructor() {
         super({
-            key: 'PlayScene'
+            key: SceneKey.PLAY
         })
+    }
+
+    private init(data: object): void {
+        console.log(data)
     }
 
     private preload(): void {
