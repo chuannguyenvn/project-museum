@@ -40,11 +40,11 @@ class PlayScene extends Phaser.Scene
         this.cameras.main.zoom = 0.5
         this.cameras.main.centerOn(this.currentLevel.levelSize.x * Constants.CELL_SIZE / 2,
             this.currentLevel.levelSize.y * Constants.CELL_SIZE / 2)
-        
+
         this.light = new SpotLight(this)
         this.light.setInteractive()
         this.input.setDraggable(this.light)
-        
+
         this.allBlocks = []
         this.allWorldCorners = []
         this.allPaintings = []
@@ -94,11 +94,6 @@ class PlayScene extends Phaser.Scene
 
         new PlaceButton(this)
     }
-
-    // update(time: number, delta: number) {
-    //     console.log(this.input.mousePointer.position)
-    //     console.log(this.cameras.main.getWorldPoint(this.input.mousePointer.position.x, this.input.mousePointer.position.y))
-    // }
 }
 
 export default PlayScene

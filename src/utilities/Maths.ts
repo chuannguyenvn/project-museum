@@ -14,7 +14,7 @@ class Maths
         const firstToSecond = Phaser.Math.Distance.BetweenPoints(firstPoint, secondPoints)
         const pointToFirst = Phaser.Math.Distance.BetweenPoints(pointToCheck, firstPoint)
         const pointToSecond = Phaser.Math.Distance.BetweenPoints(pointToCheck, secondPoints)
-        
+
         return Math.abs(pointToFirst + pointToSecond - firstToSecond) < Phaser.Math.EPSILON
     }
 }

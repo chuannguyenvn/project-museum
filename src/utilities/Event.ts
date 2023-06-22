@@ -1,4 +1,5 @@
-﻿class GameEvent {
+﻿class GameEvent
+{
     private _eventCallbacks: (() => void)[] = []
 
     public subscribe(callback: () => void): void {
@@ -10,13 +11,15 @@
     }
 
     public invoke(): void {
-        for (const callback of this._eventCallbacks) {
+        for (const callback of this._eventCallbacks)
+        {
             callback()
         }
     }
 }
 
-class ParamGameEvent<T> {
+class ParamGameEvent<T>
+{
     private _eventCallbacks: ((arg: T) => void)[] = []
 
     public subscribe(callback: (arg: T) => void): void {
@@ -28,7 +31,8 @@ class ParamGameEvent<T> {
     }
 
     public invoke(arg: T): void {
-        for (const callback of this._eventCallbacks) {
+        for (const callback of this._eventCallbacks)
+        {
             callback(arg)
         }
     }

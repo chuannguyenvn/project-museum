@@ -9,7 +9,7 @@ class PlaceButton extends ButtonPrefab
     constructor(scene: PlayScene) {
         super(scene)
         this.playScene = scene
-        
+
         this.setAnchor(new Vector2(0.5, 0))
         this.setOffset(new Vector2(0, 100))
     }

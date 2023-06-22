@@ -73,6 +73,91 @@ class SpotLight extends Sprite
         this.castAgainstPaintings()
     }
 
+    public raycast(normalizedStart: Vector2, normalizedDirection: Vector2): Vector2 {
+        const unitStepSize = new Vector2(
+            Math.sqrt(1 + (normalizedDirection.y / normalizedDirection.x) * (normalizedDirection.y / normalizedDirection.x)),
+            Math.sqrt(1 + (normalizedDirection.x / normalizedDirection.y) * (normalizedDirection.x / normalizedDirection.y)))
+
+        const currentFlagCoord = new Vector2(Math.floor(normalizedStart.x), Math.floor(normalizedStart.y))
+        const flagStep = new Vector2(0, 0)
+        const raySoFar = new Vector2(0, 0)
+
+        if (normalizedDirection.x > 0)
+        {
+            flagStep.x = 1
+            raySoFar.x = (currentFlagCoord.x + 1 - normalizedStart.x) * unitStepSize.x
+        }
+        else
+        {
+            flagStep.x = -1
+            raySoFar.x = (normalizedStart.x - currentFlagCoord.x) * unitStepSize.x
+        }
+
+        if (normalizedDirection.y > 0)
+        {
+            flagStep.y = 1
+            raySoFar.y = (currentFlagCoord.y + 1 - normalizedStart.y) * unitStepSize.y
+        }
+        else
+        {
+            flagStep.y = -1
+            raySoFar.y = (normalizedStart.y - currentFlagCoord.y) * unitStepSize.y
+        }
+
+        let distance = 0
+        const maxDistance = 10000
+        while (raySoFar.x < maxDistance && raySoFar.y < maxDistance)
+        {
+            if (raySoFar.x < raySoFar.y)
+            {
+                currentFlagCoord.x += flagStep.x
+                distance = raySoFar.x
+                raySoFar.x += unitStepSize.x
+            }
+            else
+            {
+                currentFlagCoord.y += flagStep.y
+                distance = raySoFar.y
+                raySoFar.y += unitStepSize.y
+            }
+
+            if (currentFlagCoord.x >= 0 && currentFlagCoord.x < this.scene.currentLevel.levelSize.x &&
+                currentFlagCoord.y >= 0 && currentFlagCoord.y < this.scene.currentLevel.levelSize.y)
+            {
+                if (this.scene.blockFlags[currentFlagCoord.x][currentFlagCoord.y])
+                {
+                    const s = new Vector2(normalizedStart.x, normalizedStart.y)
+                    const result = normalizedStart.add(normalizedDirection.scale(distance))
+
+                    this.drawRay(
+                        new Vector2(
+                            s.x * Constants.CELL_SIZE,
+                            s.y * Constants.CELL_SIZE),
+                        new Vector2(
+                            result.x * Constants.CELL_SIZE,
+                            result.y * Constants.CELL_SIZE))
+
+                    return new Vector2(
+                        result.x * Constants.CELL_SIZE,
+                        result.y * Constants.CELL_SIZE)
+                }
+            }
+            else break
+        }
+
+        this.drawRay(
+            new Vector2(
+                normalizedStart.x * Constants.CELL_SIZE,
+                normalizedStart.y * Constants.CELL_SIZE),
+            new Vector2(
+                (normalizedDirection.x * 1000 + normalizedStart.x) * Constants.CELL_SIZE,
+                (normalizedDirection.y * 1000 + normalizedStart.y) * Constants.CELL_SIZE))
+
+        return new Vector2(
+            (normalizedDirection.x * 1000 + normalizedStart.x) * Constants.CELL_SIZE,
+            (normalizedDirection.y * 1000 + normalizedStart.y) * Constants.CELL_SIZE)
+    }
+
     private resetDebugVisuals(): void {
         this.raycastLines.forEach((line) => line.destroy())
         this.raycastLines = []
@@ -183,91 +268,6 @@ class SpotLight extends Sprite
 
             painting.setLightStatus(allPointVisible)
         }
-    }
-
-    public raycast(normalizedStart: Vector2, normalizedDirection: Vector2): Vector2 {
-        const unitStepSize = new Vector2(
-            Math.sqrt(1 + (normalizedDirection.y / normalizedDirection.x) * (normalizedDirection.y / normalizedDirection.x)),
-            Math.sqrt(1 + (normalizedDirection.x / normalizedDirection.y) * (normalizedDirection.x / normalizedDirection.y)))
-
-        const currentFlagCoord = new Vector2(Math.floor(normalizedStart.x), Math.floor(normalizedStart.y))
-        const flagStep = new Vector2(0, 0)
-        const raySoFar = new Vector2(0, 0)
-
-        if (normalizedDirection.x > 0)
-        {
-            flagStep.x = 1
-            raySoFar.x = (currentFlagCoord.x + 1 - normalizedStart.x) * unitStepSize.x
-        }
-        else
-        {
-            flagStep.x = -1
-            raySoFar.x = (normalizedStart.x - currentFlagCoord.x) * unitStepSize.x
-        }
-
-        if (normalizedDirection.y > 0)
-        {
-            flagStep.y = 1
-            raySoFar.y = (currentFlagCoord.y + 1 - normalizedStart.y) * unitStepSize.y
-        }
-        else
-        {
-            flagStep.y = -1
-            raySoFar.y = (normalizedStart.y - currentFlagCoord.y) * unitStepSize.y
-        }
-
-        let distance = 0
-        const maxDistance = 10000
-        while (raySoFar.x < maxDistance && raySoFar.y < maxDistance)
-        {
-            if (raySoFar.x < raySoFar.y)
-            {
-                currentFlagCoord.x += flagStep.x
-                distance = raySoFar.x
-                raySoFar.x += unitStepSize.x
-            }
-            else
-            {
-                currentFlagCoord.y += flagStep.y
-                distance = raySoFar.y
-                raySoFar.y += unitStepSize.y
-            }
-
-            if (currentFlagCoord.x >= 0 && currentFlagCoord.x < this.scene.currentLevel.levelSize.x &&
-                currentFlagCoord.y >= 0 && currentFlagCoord.y < this.scene.currentLevel.levelSize.y)
-            {
-                if (this.scene.blockFlags[currentFlagCoord.x][currentFlagCoord.y])
-                {
-                    const s = new Vector2(normalizedStart.x, normalizedStart.y)
-                    const result = normalizedStart.add(normalizedDirection.scale(distance))
-
-                    this.drawRay(
-                        new Vector2(
-                            s.x * Constants.CELL_SIZE,
-                            s.y * Constants.CELL_SIZE),
-                        new Vector2(
-                            result.x * Constants.CELL_SIZE,
-                            result.y * Constants.CELL_SIZE))
-
-                    return new Vector2(
-                        result.x * Constants.CELL_SIZE,
-                        result.y * Constants.CELL_SIZE)
-                }
-            }
-            else break
-        }
-
-        this.drawRay(
-            new Vector2(
-                normalizedStart.x * Constants.CELL_SIZE,
-                normalizedStart.y * Constants.CELL_SIZE),
-            new Vector2(
-                (normalizedDirection.x * 1000 + normalizedStart.x) * Constants.CELL_SIZE,
-                (normalizedDirection.y * 1000 + normalizedStart.y) * Constants.CELL_SIZE))
-
-        return new Vector2(
-            (normalizedDirection.x * 1000 + normalizedStart.x) * Constants.CELL_SIZE,
-            (normalizedDirection.y * 1000 + normalizedStart.y) * Constants.CELL_SIZE)
     }
 
     private drawRay(start: Vector2, end: Vector2) {

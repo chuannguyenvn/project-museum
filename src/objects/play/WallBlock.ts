@@ -37,9 +37,7 @@ class WallBlock extends GameObject
         this.worldCornerPositions = query(normalizedCornerPositions)
             .select((vectorLike) => new Vector2((vectorLike.x) * Constants.CELL_SIZE, (vectorLike.y) * Constants.CELL_SIZE))
             .toArray()
-
-        console.log(this.worldCornerPositions)
-
+        
         this.wallPolygon = scene.add.polygon(0, 0, this.worldCornerPositions, 0xffffff)
         this.wallPolygon.setOrigin(0, 0)
     }
