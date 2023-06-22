@@ -1,8 +1,8 @@
 ﻿import Color = Phaser.Display.Color
 import Rectangle = Phaser.GameObjects.Rectangle
 import Vector2 = Phaser.Math.Vector2
-import PlayScene from "../scenes/PlayScene"
-import Constants from "../configs/Constants"
+import PlayScene from "../../scenes/PlayScene"
+import Constants from "../../configs/Constants"
 
 class Painting extends Rectangle
 {

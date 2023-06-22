@@ -1,9 +1,9 @@
 ﻿import GameObject = Phaser.GameObjects.GameObject
 import Rectangle = Phaser.GameObjects.Rectangle
 import Vector2 = Phaser.Math.Vector2
-import PlayScene from "../scenes/PlayScene"
-import GameObjectType from "../configs/GameObjectType"
-import Constants from "../configs/Constants"
+import PlayScene from "../../scenes/PlayScene"
+import GameObjectType from "../../configs/GameObjectType"
+import Constants from "../../configs/Constants"
 
 class Boundary extends GameObject
 {

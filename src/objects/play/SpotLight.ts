@@ -3,13 +3,13 @@ import Sprite = Phaser.GameObjects.Sprite
 import Polygon = Phaser.GameObjects.Polygon
 import Line = Phaser.GameObjects.Line
 import Arc = Phaser.GameObjects.Arc
-import PlayScene from "../scenes/PlayScene"
-import Constants from "../configs/Constants"
-import SpriteKey from "../configs/SpriteKey"
-import StateMachine from "../utilities/StateMachine"
-import query from "../utilities/Query"
-import Convert from "../utilities/Convert"
-import Maths from "../utilities/Maths"
+import PlayScene from "../../scenes/PlayScene"
+import Constants from "../../configs/Constants"
+import SpriteKey from "../../configs/SpriteKey"
+import StateMachine from "../../utilities/StateMachine"
+import query from "../../utilities/Query"
+import Convert from "../../utilities/Convert"
+import Maths from "../../utilities/Maths"
 import Phaser from "phaser"
 
 class SpotLight extends Sprite
