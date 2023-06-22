@@ -6,6 +6,8 @@ import SpriteKey from "../configs/SpriteKey"
 import FileLookUp from "../configs/FileLookUp"
 import Painting from "../objects/Painting"
 import Convert from "../utilities/Convert"
+import Boundary from "../objects/Boundary"
+import Constants from "../configs/Constants"
 import Vector2 = Phaser.Math.Vector2
 import Color = Phaser.Display.Color
 
@@ -19,6 +21,7 @@ class PlayScene extends Phaser.Scene
     public blockFlags: boolean[][]
 
     public light: SpotLight
+    public cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys
 
     constructor() {
         super({
@@ -34,7 +37,7 @@ class PlayScene extends Phaser.Scene
         this.light = new SpotLight(this)
         this.light.setInteractive()
         this.input.setDraggable(this.light)
-        
+
         this.currentLevel = GameManager.GetCurrentLevel()
 
         this.allBlocks = []
@@ -73,13 +76,45 @@ class PlayScene extends Phaser.Scene
             this.allPaintings.push(painting)
         }
 
+        new Boundary(this, Convert.ToVector2(this.currentLevel.levelSize))
+        
+        this.cameras.main.zoom = 0.5
+        this.cameras.main.centerOn(this.currentLevel.levelSize.x * Constants.CELL_SIZE / 2,
+            this.currentLevel.levelSize.y * Constants.CELL_SIZE / 2)
+
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
-            this.light.handlePointerMove(this.input.activePointer.position)
+            const pointerScreenPosition = this.input.activePointer.position.clone()
+            this.light.handlePointerMove(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))
         })
 
         this.input.on(Phaser.Input.Events.POINTER_UP, () => {
             this.light.handlePointerUp()
         })
+
+        if (this.input.keyboard?.createCursorKeys())
+            this.cursorKeys = this.input.keyboard?.createCursorKeys()
+    }
+
+    update(time: number, delta: number) {
+        super.update(time, delta)
+
+        if (this.cursorKeys.down.isDown)
+        {
+            this.cameras.main.scrollY += 1
+        }
+        if (this.cursorKeys.up.isDown)
+        {
+            this.cameras.main.scrollY -= 1
+        }
+        if (this.cursorKeys.right.isDown)
+        {
+            this.cameras.main.scrollX += 1
+        }
+        if (this.cursorKeys.left.isDown)
+        {
+            this.cameras.main.scrollX -= 1
+        }
+        console.log(this.cameras.main.scrollX + ", " + this.cameras.main.scrollY)
     }
 }
 
