@@ -32,6 +32,9 @@ class PlayScene extends Phaser.Scene
 
     private create(): void {
         this.light = new SpotLight(this)
+        this.light.setInteractive()
+        this.input.setDraggable(this.light)
+        
         this.currentLevel = GameManager.GetCurrentLevel()
 
         this.allBlocks = []
@@ -71,9 +74,8 @@ class PlayScene extends Phaser.Scene
         }
 
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
-                this.light.handlePointerMove(this.input.activePointer.position)
-            }
-        )
+            this.light.handlePointerMove(this.input.activePointer.position)
+        })
 
         this.input.on(Phaser.Input.Events.POINTER_UP, () => {
             this.light.handlePointerUp()

@@ -10,6 +10,7 @@ import StateMachine from "../utilities/StateMachine"
 import query from "../utilities/Query"
 import Convert from "../utilities/Convert"
 import Maths from "../utilities/Maths"
+import Phaser from "phaser"
 
 class SpotLight extends Sprite
 {
@@ -20,7 +21,7 @@ class SpotLight extends Sprite
 
     private lightPolygon: Polygon
     private raycastLines: Line[] = []
-    private rayCastArc: Arc[] = []
+    private raycastArc: Arc[] = []
 
     private normalizedPosition: Vector2
 
@@ -32,28 +33,35 @@ class SpotLight extends Sprite
 
         this.stateMachine.changeState(LightState.Moving)
         this.scale = 0.1
+
+        this.on(Phaser.Input.Events.GAMEOBJECT_DRAG_START, () => {
+            this.stateMachine.changeState(LightState.Moving)
+        })
+
     }
 
     public handlePointerUp(): void {
-        if (this.stateMachine.currentState === LightState.Moving)
+        switch (this.stateMachine.currentState)
         {
-            this.stateMachine.changeState(LightState.Rotating)
-        }
-        else if (this.stateMachine.currentState === LightState.Rotating)
-        {
-            this.stateMachine.changeState(LightState.Idle)
+            case LightState.Moving:
+                this.stateMachine.changeState(LightState.Rotating)
+                break
+            case LightState.Rotating:
+                this.stateMachine.changeState(LightState.Idle)
+                break
         }
     }
 
     public handlePointerMove(pointerPosition: Vector2): void {
-        if (this.stateMachine.currentState === LightState.Moving)
+        switch (this.stateMachine.currentState)
         {
-            this.setPosition(pointerPosition.x, pointerPosition.y)
-        }
-        else if (this.stateMachine.currentState === LightState.Rotating)
-        {
-            this.direction = pointerPosition.clone().subtract(new Vector2(this.x, this.y)).normalize()
-            this.castLight()
+            case LightState.Moving:
+                this.setPosition(pointerPosition.x, pointerPosition.y)
+                break
+            case LightState.Rotating:
+                this.direction = pointerPosition.clone().subtract(new Vector2(this.x, this.y)).normalize()
+                this.castLight()
+                break
         }
     }
 
@@ -69,8 +77,8 @@ class SpotLight extends Sprite
         this.raycastLines.forEach((line) => line.destroy())
         this.raycastLines = []
 
-        this.rayCastArc.forEach((arc) => arc.destroy())
-        this.rayCastArc = []
+        this.raycastArc.forEach((arc) => arc.destroy())
+        this.raycastArc = []
     }
 
     private calculatePosition(): void {
@@ -94,7 +102,7 @@ class SpotLight extends Sprite
         {
             const currentCorner = cornersInRange[i]
             const nextCorner = cornersInRange[(i + 1) % cornersInRange.length]
-            const offset = 0.001
+            const offset = Constants.SLIGHTLY_WORSE_EPSILON
 
             // Corner points are always counter-clockwise ordered
 
@@ -264,7 +272,7 @@ class SpotLight extends Sprite
 
     private drawRay(start: Vector2, end: Vector2) {
         this.raycastLines.push(this.scene.add.line(0, 0, start.x, start.y, end.x, end.y, 0xffffff).setOrigin(0, 0))
-        this.rayCastArc.push(this.scene.add.arc(end.x, end.y, 5, 0, 359, false, 0xff0000).setDepth(100))
+        this.raycastArc.push(this.scene.add.arc(end.x, end.y, 5, 0, 359, false, 0xff0000).setDepth(100))
     }
 }
 
