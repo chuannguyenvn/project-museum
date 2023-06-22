@@ -12,16 +12,14 @@ class ButtonPrefab extends NineSlice
     public pointerOutTint: Color = new Color(255, 255, 255)
 
     constructor(scene: Scene, spriteKey: SpriteKey = SpriteKey.DEFAULT_BUTTON) {
-        super(scene, 0, 0, spriteKey)
+        super(scene, 0, 0, spriteKey, undefined, 1, 1, 1, 1, 1,1)
         scene.add.existing(this)
-
+        
         this.setInteractive()
         this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => this.clicked.invoke())
         this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => this.setTintFill(this.pointerOverTint.color))
         this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => this.setTintFill(this.pointerOutTint.color))
         this.depth = 10000
-
-        this.setOrigin(0.5, 0)
     }
 
     // Relative to the screen
@@ -38,7 +36,6 @@ class ButtonPrefab extends NineSlice
 
     // Relative to the pivot, in pixels
     public setOffset(pixelPosition: Vector2): void {
-        const mainCamera = this.scene.cameras.main
         this.x += pixelPosition.x
         this.y += pixelPosition.y
     }
