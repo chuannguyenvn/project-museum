@@ -6,6 +6,13 @@ interface ILevelData
     levelSize: IVectorLike
     wallLayout: IVectorLike[][]
     cornerLayout: IVectorLike[][]
+    paintingLayout: IPaintingLayoutData[]
+}
+
+interface IPaintingLayoutData
+{
+    position: IVectorLike
+    size: IVectorLike
 }
 
 export default ILevelData

@@ -4,7 +4,10 @@ import ILevelData from "../interfaces/ILevelData"
 import SpotLight from "../objects/SpotLight"
 import SpriteKey from "../configs/SpriteKey"
 import FileLookUp from "../configs/FileLookUp"
+import Painting from "../objects/Painting"
+import Convert from "../utilities/Convert"
 import Vector2 = Phaser.Math.Vector2
+import Color = Phaser.Display.Color
 
 class PlayScene extends Phaser.Scene
 {
@@ -12,6 +15,7 @@ class PlayScene extends Phaser.Scene
 
     public allBlocks: WallBlock[]
     public allWorldCorners: Vector2[]
+    public allPaintings: Painting[]
     public blockFlags: boolean[][]
 
     public light: SpotLight
@@ -20,9 +24,6 @@ class PlayScene extends Phaser.Scene
         super({
             key: 'PlayScene'
         })
-        //
-        // console.log(new Vector2(1, 1).angle())
-        // console.log(new Vector2(1, -1).angle())
     }
 
     private preload(): void {
@@ -35,6 +36,7 @@ class PlayScene extends Phaser.Scene
 
         this.allBlocks = []
         this.allWorldCorners = []
+        this.allPaintings = []
         this.blockFlags = []
 
         for (let x = 0; x < this.currentLevel.levelSize.x; x++)
@@ -58,6 +60,14 @@ class PlayScene extends Phaser.Scene
                 const wallUnit = this.currentLevel.wallLayout[i][j]
                 this.blockFlags[wallUnit.x][wallUnit.y] = true
             }
+        }
+
+        for (let i = 0; i < this.currentLevel.paintingLayout.length; i++)
+        {
+            const paintingPosition = Convert.ToVector2(this.currentLevel.paintingLayout[i].position)
+            const paintingSize = Convert.ToVector2(this.currentLevel.paintingLayout[i].size)
+            const painting = new Painting(this, paintingPosition, paintingSize, new Color(255, 0, 0))
+            this.allPaintings.push(painting)
         }
 
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
