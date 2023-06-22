@@ -22,6 +22,11 @@
     public any(predicate: (arg: T) => boolean): boolean {
         return this.array.some((value, _1, _2) => predicate(value))
     }
+    
+    public concat(other: Query<T>) : Query<T>
+    {
+        return new Query<T>(this.array.concat(other.array))
+    }
 
     public first(predicate: (arg: T) => boolean): T | undefined {
         return this.array.find((value, _1, _2) => predicate(value))

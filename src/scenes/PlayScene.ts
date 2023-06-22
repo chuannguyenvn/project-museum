@@ -20,6 +20,9 @@ class PlayScene extends Phaser.Scene
         super({
             key: 'PlayScene'
         })
+        //
+        // console.log(new Vector2(1, 1).angle())
+        // console.log(new Vector2(1, -1).angle())
     }
 
     private preload(): void {

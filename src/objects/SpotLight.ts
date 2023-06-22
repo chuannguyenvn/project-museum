@@ -52,9 +52,6 @@ class SpotLight extends Sprite
         {
             this.direction = pointerPosition.clone().subtract(new Vector2(this.x, this.y)).normalize()
             this.castLight()
-
-            // const startPos = new Vector2(this.x / Constants.CELL_SIZE, this.y / Constants.CELL_SIZE)
-            // this.raycast(startPos.clone(), (pointerPosition.clone().scale(1 / Constants.CELL_SIZE).subtract(startPos.clone())).normalize())
         }
     }
 
@@ -82,14 +79,16 @@ class SpotLight extends Sprite
         {
             const currentCorner = cornersInRange[i]
             const nextCorner = cornersInRange[(i + 1) % cornersInRange.length]
-            const offset = 0.01
+            const offset = 0.001
 
             // Corner points are always counter-clockwise ordered
 
-            // Changing y means 
-            //  _| or  _
-            //        |
-            // => Raycast to NW and SE of point
+            /*
+               Changing y means 
+                _| or  _
+                      |
+               => Raycast to NW and SE of point
+            */
             if (currentCorner.y === nextCorner.y)
             {
                 const nwRaycastTarget = new Vector2(currentCorner.x - this.x - offset, currentCorner.y - this.y - offset).normalize()
@@ -99,10 +98,12 @@ class SpotLight extends Sprite
                 lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), seRaycastTarget))
             }
 
-            // Changing x means
-            //  |_ or  _
-            //          |
-            // => Raycast to NE and SW of point
+            /*
+               Changing x means
+                |_ or  _
+                        |
+               => Raycast to NE and SW of point
+            */
             else
             {
                 const neRaycastTarget = new Vector2(currentCorner.x - this.x + offset, currentCorner.y - this.y - offset).normalize()
@@ -113,16 +114,16 @@ class SpotLight extends Sprite
             }
         }
 
-        lightPolygonPath.push(new Vector2(this.x, this.y))
-        lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
-        lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(-Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
-
+        // Sort points by comparing the angle from point vector to one of the cone's vector
         lightPolygonPath = query(lightPolygonPath)
             .select(Convert.ToVector2)
-            .orderByAscending((point) => point.clone().subtract(new Vector2(this.x, this.y)).angle())
+            .orderByAscending((point) => (Maths.DegreeAngleBetween(point.clone().subtract(new Vector2(this.x, this.y)), this.direction.clone().rotate(Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2))))
             .toArray()
 
-        console.log(lightPolygonPath)
+        // Place one of the cone's raycast result at the start to make sure the whole array is CW (CCW?) ordered
+        lightPolygonPath.unshift(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
+        lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(-Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
+        lightPolygonPath.push(new Vector2(this.x, this.y))
 
         if (this.lightPolygon) this.lightPolygon.destroy()
         this.lightPolygon = this.scene.add.polygon(0, 0, lightPolygonPath, 0xeeeeee)
@@ -217,7 +218,7 @@ class SpotLight extends Sprite
 
     private drawRay(start: Vector2, end: Vector2) {
         this.raycastLines.push(this.scene.add.line(0, 0, start.x, start.y, end.x, end.y, 0xffffff).setOrigin(0, 0))
-        this.rayCastArc.push(this.scene.add.arc(end.x, end.y, 5, 0, 359, false, 0xff0000))
+        this.rayCastArc.push(this.scene.add.arc(end.x, end.y, 5, 0, 359, false, 0xff0000).setDepth(100))
     }
 }
 
