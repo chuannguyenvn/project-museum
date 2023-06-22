@@ -15,6 +15,8 @@
     }
 
     public changeState(state: E): void {
+        if (this._currentState === state) return
+
         for (let i = 0; i < this.onExitCallbacks.length; i++)
         {
             if (this.onExitCallbacks[i].state !== this._currentState) continue
