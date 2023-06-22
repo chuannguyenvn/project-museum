@@ -35,8 +35,11 @@ class Painting extends Rectangle
             }
         }
     }
-    
-    
+
+    public setLightStatus(isFullyLighted: boolean): void {
+        if (isFullyLighted) this.fillColor = new Color(255, 0, 0).color
+        else this.fillColor = new Color(0, 0, 0).color
+    }
 }
 
 export default Painting

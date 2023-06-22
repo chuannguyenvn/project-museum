@@ -22,6 +22,8 @@ class SpotLight extends Sprite
     private raycastLines: Line[] = []
     private rayCastArc: Arc[] = []
 
+    private normalizedPosition: Vector2
+
     constructor(scene: PlayScene) {
         super(scene, 0, 0, SpriteKey.LIGHT)
         scene.add.existing(this)
@@ -56,12 +58,26 @@ class SpotLight extends Sprite
     }
 
     public castLight(): void {
+        this.resetDebugVisuals()
+
+        this.calculatePosition()
+        this.castAgainstWalls()
+        this.castAgainstPaintings()
+    }
+
+    private resetDebugVisuals(): void {
         this.raycastLines.forEach((line) => line.destroy())
         this.raycastLines = []
 
         this.rayCastArc.forEach((arc) => arc.destroy())
         this.rayCastArc = []
+    }
 
+    private calculatePosition(): void {
+        this.normalizedPosition = new Vector2(this.x / Constants.CELL_SIZE, this.y / Constants.CELL_SIZE)
+    }
+
+    private castAgainstWalls(): void {
         const cornersInRange = query(this.scene.allWorldCorners)
             .select(Convert.ToVector2)
             .where((corner) => {
@@ -74,7 +90,6 @@ class SpotLight extends Sprite
             .toArray()
 
         let lightPolygonPath = []
-        const normalizedLightPosition = new Vector2(this.x / Constants.CELL_SIZE, this.y / Constants.CELL_SIZE)
         for (let i = 0; i < cornersInRange.length; i++)
         {
             const currentCorner = cornersInRange[i]
@@ -94,8 +109,8 @@ class SpotLight extends Sprite
                 const nwRaycastTarget = new Vector2(currentCorner.x - this.x - offset, currentCorner.y - this.y - offset).normalize()
                 const seRaycastTarget = new Vector2(currentCorner.x - this.x + offset, currentCorner.y - this.y + offset).normalize()
 
-                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), nwRaycastTarget))
-                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), seRaycastTarget))
+                lightPolygonPath.push(this.raycast(this.normalizedPosition.clone(), nwRaycastTarget))
+                lightPolygonPath.push(this.raycast(this.normalizedPosition.clone(), seRaycastTarget))
             }
 
             /*
@@ -109,8 +124,8 @@ class SpotLight extends Sprite
                 const neRaycastTarget = new Vector2(currentCorner.x - this.x + offset, currentCorner.y - this.y - offset).normalize()
                 const swRaycastTarget = new Vector2(currentCorner.x - this.x - offset, currentCorner.y - this.y + offset).normalize()
 
-                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), neRaycastTarget))
-                lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), swRaycastTarget))
+                lightPolygonPath.push(this.raycast(this.normalizedPosition.clone(), neRaycastTarget))
+                lightPolygonPath.push(this.raycast(this.normalizedPosition.clone(), swRaycastTarget))
             }
         }
 
@@ -120,15 +135,46 @@ class SpotLight extends Sprite
             .orderByAscending((point) => (Maths.DegreeAngleBetween(point.clone().subtract(new Vector2(this.x, this.y)), this.direction.clone().rotate(Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2))))
             .toArray()
 
-        // Place one of the cone's raycast result at the start to make sure the whole array is CW (CCW?) ordered
-        lightPolygonPath.unshift(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
-        lightPolygonPath.push(this.raycast(normalizedLightPosition.clone(), this.direction.clone().rotate(-Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
+        // Place one of the cone's edge raycast result at the start to make sure the whole array is CW (CCW?) ordered
+        lightPolygonPath.unshift(this.raycast(this.normalizedPosition.clone(), this.direction.clone().rotate(Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
+        lightPolygonPath.push(this.raycast(this.normalizedPosition.clone(), this.direction.clone().rotate(-Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
         lightPolygonPath.push(new Vector2(this.x, this.y))
 
         if (this.lightPolygon) this.lightPolygon.destroy()
         this.lightPolygon = this.scene.add.polygon(0, 0, lightPolygonPath, 0xeeeeee)
         this.lightPolygon.setOrigin(0, 0)
         this.lightPolygon.setAlpha(0.5)
+    }
+
+    private castAgainstPaintings(): void {
+        for (let paintingIndex = 0; paintingIndex < this.scene.allPaintings.length; paintingIndex++)
+        {
+            let allPointVisible = true
+            const painting = this.scene.allPaintings[paintingIndex]
+
+            for (let pointIndex = 0; pointIndex < painting.paintingRaycastPoints.length; pointIndex++)
+            {
+                const point = painting.paintingRaycastPoints[pointIndex].clone()
+                const pointDirection = point.clone().subtract(new Vector2(this.x, this.y)).normalize()
+                const deltaAngle = Maths.DegreeAngleBetween(
+                    new Vector2(this.direction.x, this.direction.y), pointDirection)
+
+                if (Math.abs(deltaAngle) > Constants.LIGHT_SPREAD_ANGLE / 2)
+                {
+                    allPointVisible = false
+                    break
+                }
+
+                const result = this.raycast(this.normalizedPosition.clone(), pointDirection)
+                if (result.subtract(point.clone()).length() > Constants.SLIGHTLY_WORSE_EPSILON)
+                {
+                    allPointVisible = false
+                    break
+                }
+            }
+
+            painting.setLightStatus(allPointVisible)
+        }
     }
 
     public raycast(normalizedStart: Vector2, normalizedDirection: Vector2): Vector2 {
