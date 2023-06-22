@@ -16,7 +16,7 @@ class ButtonPrefab extends NineSlice
     private offset: Vector2 = new Vector2(0, 0)
 
     constructor(scene: Scene, spriteKey: SpriteKey = SpriteKey.DEFAULT_BUTTON) {
-        super(scene, 0, 0, spriteKey, undefined, 1, 1, 1, 1, 1, 1)
+        super(scene, 0, 0, spriteKey, undefined, 136, 136, 15, 15, 15, 15)
         scene.add.existing(this)
 
         this.setInteractive()
