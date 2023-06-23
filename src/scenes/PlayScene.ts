@@ -10,6 +10,7 @@ import Boundary from "../objects/play/Boundary"
 import Constants from "../configs/Constants"
 import SceneKey from "../configs/SceneKey"
 import {GameEvent} from "../utilities/Event"
+import Phaser from "phaser"
 import Vector2 = Phaser.Math.Vector2
 import Color = Phaser.Display.Color
 
@@ -26,8 +27,6 @@ class PlayScene extends Phaser.Scene
     public allPaintings: Painting[]
     public blockFlags: boolean[][]
 
-    
-    
     public light: SpotLight
     private paintingUnlitCount: number = 0
 
@@ -50,7 +49,6 @@ class PlayScene extends Phaser.Scene
             this.currentLevel.levelSize.y * Constants.CELL_SIZE / 2)
 
         this.light = new SpotLight(this)
-        this.light.setInteractive()
         this.input.setDraggable(this.light)
 
         this.allBlocks = []
@@ -94,7 +92,7 @@ class PlayScene extends Phaser.Scene
         new Boundary(this, Convert.ToVector2(this.currentLevel.levelSize), this.currentLevel.wallColor)
 
         this.cameras.main.backgroundColor = Color.HexStringToColor(this.currentLevel.groundColor)
-        
+
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
             const pointerScreenPosition = this.input.activePointer.position.clone()
             this.light.handlePointerMove(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))

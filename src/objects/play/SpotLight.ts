@@ -11,6 +11,7 @@ import query from "../../utilities/Query"
 import Convert from "../../utilities/Convert"
 import Maths from "../../utilities/Maths"
 import Phaser from "phaser"
+import LightArea from "./LightArea"
 
 class SpotLight extends Sprite
 {
@@ -19,7 +20,7 @@ class SpotLight extends Sprite
     public direction: Vector2 = new Vector2()
     public scene: PlayScene
 
-    private lightPolygon: Polygon
+    public readonly lightArea: LightArea
     private raycastLines: Line[] = []
     private raycastArc: Arc[] = []
 
@@ -35,6 +36,10 @@ class SpotLight extends Sprite
         this.scale = 0.1
 
         Phaser.Math.RandomXY(this.direction)
+
+        this.lightArea = new LightArea(this.scene, [new Vector2(0, 0)])
+        
+        this.setInteractive()
 
         this.on(Phaser.Input.Events.GAMEOBJECT_DRAG_START, () => {
             this.stateMachine.changeState(LightState.Moving)
@@ -235,10 +240,7 @@ class SpotLight extends Sprite
         lightPolygonPath.push(this.raycast(this.normalizedPosition.clone(), this.direction.clone().rotate(-Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
         lightPolygonPath.push(new Vector2(this.x, this.y))
 
-        if (this.lightPolygon) this.lightPolygon.destroy()
-        this.lightPolygon = this.scene.add.polygon(0, 0, lightPolygonPath, 0xeeeeee)
-        this.lightPolygon.setOrigin(0, 0)
-        this.lightPolygon.setAlpha(0.5)
+        this.lightArea.setTo(lightPolygonPath)
     }
 
     private castAgainstPaintings(): void {
