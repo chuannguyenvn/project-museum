@@ -43,6 +43,7 @@ class PlayScene extends Phaser.Scene
     private preload(): void {
         this.load.image(SpriteKey.LIGHT, FileLookUp[SpriteKey.LIGHT])
         this.load.image(SpriteKey.DEFAULT_BUTTON, FileLookUp[SpriteKey.DEFAULT_BUTTON])
+        this.load.image(SpriteKey.SQUARE, FileLookUp[SpriteKey.SQUARE])
     }
 
     private create(): void {
@@ -116,7 +117,7 @@ class PlayScene extends Phaser.Scene
     }
 
     private initializeLights(): void {
-        this.light = new SpotLight(this, this.matter.world)
+        this.light = new SpotLight(this)
         this.light.setPosition(100, 100)
     }
 

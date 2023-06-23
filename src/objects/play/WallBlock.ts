@@ -42,6 +42,16 @@ class WallBlock extends GameObject
         this.wallPolygon = scene.add.polygon(0, 0, this.worldCornerPositions, Color.HexStringToColor(colorString).color)
         this.wallPolygon.setOrigin(0, 0)
         this.wallPolygon.setDepth(9999)
+
+        for (let i = 0; i < this.worldCellPositions.length; i++)
+        {
+            this.scene.matter.add.rectangle(
+                this.worldCellPositions[i].x + Constants.CELL_SIZE / 2,
+                this.worldCellPositions[i].y + Constants.CELL_SIZE / 2,
+                Constants.CELL_SIZE,
+                Constants.CELL_SIZE,
+                {isStatic: true})
+        }
     }
 }
 

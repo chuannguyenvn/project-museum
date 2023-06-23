@@ -26,8 +26,8 @@ class SpotLight extends Sprite
 
     private normalizedPosition: Vector2
 
-    constructor(scene: PlayScene, world: World) {
-        super(world, 0, 0, SpriteKey.LIGHT)
+    constructor(scene: PlayScene) {
+        super(scene.matter.world, 0, 0, SpriteKey.LIGHT)
         scene.add.existing(this)
 
         this.scene = scene
