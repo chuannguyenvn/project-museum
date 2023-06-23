@@ -41,6 +41,7 @@ class WallBlock extends GameObject
 
         this.wallPolygon = scene.add.polygon(0, 0, this.worldCornerPositions, Color.HexStringToColor(colorString).color)
         this.wallPolygon.setOrigin(0, 0)
+        this.wallPolygon.setDepth(9999)
     }
 }
 
