@@ -12,8 +12,8 @@ class ButtonPrefab extends NineSlice
     public pointerOutTint: Color = new Color(255, 255, 255)
     public pointerDownTint: Color = new Color(160, 160, 160)
 
-    private anchor: Vector2 = new Vector2(0, 0)
-    private pivot: Vector2 = new Vector2(0, 0)
+    private anchor: Vector2 = new Vector2(0.5, 0.5)
+    private pivot: Vector2 = new Vector2(0.5, 0.5)
     private offset: Vector2 = new Vector2(0, 0)
 
     constructor(scene: Scene, spriteKey: SpriteKey = SpriteKey.DEFAULT_BUTTON) {
@@ -29,7 +29,7 @@ class ButtonPrefab extends NineSlice
         })
         this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => this.setTintFill(this.pointerOverTint.color))
         this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => this.setTintFill(this.pointerOutTint.color))
-        
+
         this.depth = 10000
 
         addEventListener("resize", (event) => {
@@ -39,39 +39,39 @@ class ButtonPrefab extends NineSlice
         this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
             this.clicked.invoke()
         })
-
-        this.setAnchor(new Vector2(0.5, 0.5))
-        this.setPivot(new Vector2(0.5, 0.5))
+        
+        this.setAnchor(0.5, 0.5)
+        this.setPivot(0.5, 0.5)
     }
 
     private handleWindowSizeChange(): void {
-        this.setAnchor(this.anchor)
-        this.setPivot(this.pivot)
-        this.setOffset(this.offset)
+        this.setAnchor(this.anchor.x, this.anchor.y)
+        this.setPivot(this.pivot.x, this.pivot.y)
+        this.setOffset(this.offset.x, this.offset.y)
     }
 
     // Relative to the screen
-    public setAnchor(anchor: Vector2): void {
-        this.anchor = anchor
+    public setAnchor(anchorX: number, anchorY: number): void {
+        this.anchor = new Vector2(anchorX, anchorY)
 
         const mainCamera = this.scene.cameras.main
-        this.x = mainCamera.midPoint.x + mainCamera.displayWidth * (anchor.x - 0.5)
-        this.y = mainCamera.midPoint.y + mainCamera.displayHeight * (anchor.y - 0.5)
+        this.x = mainCamera.midPoint.x + mainCamera.displayWidth * (anchorX - 0.5)
+        this.y = mainCamera.midPoint.y + mainCamera.displayHeight * (anchorY - 0.5)
     }
 
     // Relative to the anchor
-    public setPivot(pivot: Vector2): void {
-        this.pivot = pivot
+    public setPivot(pivotX: number, pivotY: number): void {
+        this.pivot = new Vector2(pivotX, pivotY)
 
-        this.setOrigin(pivot.x, pivot.y)
+        this.setOrigin(pivotX, pivotY)
     }
 
     // Relative to the pivot, in pixels
-    public setOffset(offset: Vector2): void {
-        this.offset = offset
+    public setOffset(offsetX: number, offsetY: number): void {
+        this.offset = new Vector2(offsetX, offsetY)
 
-        this.x += offset.x
-        this.y += offset.y
+        this.x += offsetX
+        this.y += offsetY
     }
 }
 
