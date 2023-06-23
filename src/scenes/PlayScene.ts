@@ -96,30 +96,6 @@ class PlayScene extends Phaser.Scene
         this.input.on(Phaser.Input.Events.POINTER_UP, () => {
             this.light.handlePointerUp()
         })
-
-        const topLeft = new PlaceButton(this)
-        topLeft.setAnchor(0, 0)
-        topLeft.setPivot(0, 0)
-        topLeft.setOffset(100, 100)
-
-        const topRight = new PlaceButton(this)
-        topRight.setAnchor(1, 0)
-        topRight.setPivot(1, 0)
-        topRight.setOffset(-100, 100)
-
-        const bottomLeft = new PlaceButton(this)
-        bottomLeft.setAnchor(0, 1)
-        bottomLeft.setPivot(0, 1)
-        bottomLeft.setOffset(100, -100)
-
-        const bottomRight = new PlaceButton(this)
-        bottomRight.setAnchor(1, 1)
-        bottomRight.setPivot(1, 1)
-        bottomRight.setOffset(-100, -100)
-
-        const center = new PlaceButton(this)
-        center.setAnchor(0.5, 0.5)
-        center.setPivot(0.5, 0.5)
     }
 }
 

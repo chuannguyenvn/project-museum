@@ -1,6 +1,7 @@
 ﻿import Phaser from "phaser"
 import LevelSelectionScene from "../scenes/LevelSelectionScene"
 import PlayScene from "../scenes/PlayScene"
+import WelcomeScene from "../scenes/WelcomeScene"
 
 const GAME_CONFIG: Phaser.Types.Core.GameConfig = {
     title: 'Project Museum',
@@ -10,7 +11,7 @@ const GAME_CONFIG: Phaser.Types.Core.GameConfig = {
     scale: {
         mode: Phaser.Scale.RESIZE,
     },
-    scene: [LevelSelectionScene, PlayScene],
+    scene: [WelcomeScene, LevelSelectionScene, PlayScene],
     backgroundColor: 0x111111,
 }
 
