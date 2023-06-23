@@ -145,13 +145,13 @@ class SpotLight extends Sprite
                     const s = new Vector2(normalizedStart.x, normalizedStart.y)
                     const result = normalizedStart.add(normalizedDirection.scale(distance))
 
-                    this.drawRay(
-                        new Vector2(
-                            s.x * Constants.CELL_SIZE,
-                            s.y * Constants.CELL_SIZE),
-                        new Vector2(
-                            result.x * Constants.CELL_SIZE,
-                            result.y * Constants.CELL_SIZE))
+                    // this.drawRay(
+                    //     new Vector2(
+                    //         s.x * Constants.CELL_SIZE,
+                    //         s.y * Constants.CELL_SIZE),
+                    //     new Vector2(
+                    //         result.x * Constants.CELL_SIZE,
+                    //         result.y * Constants.CELL_SIZE))
 
                     return new Vector2(
                         result.x * Constants.CELL_SIZE,
@@ -161,13 +161,13 @@ class SpotLight extends Sprite
             else break
         }
 
-        this.drawRay(
-            new Vector2(
-                normalizedStart.x * Constants.CELL_SIZE,
-                normalizedStart.y * Constants.CELL_SIZE),
-            new Vector2(
-                (normalizedDirection.x * 1000 + normalizedStart.x) * Constants.CELL_SIZE,
-                (normalizedDirection.y * 1000 + normalizedStart.y) * Constants.CELL_SIZE))
+        // this.drawRay(
+        //     new Vector2(
+        //         normalizedStart.x * Constants.CELL_SIZE,
+        //         normalizedStart.y * Constants.CELL_SIZE),
+        //     new Vector2(
+        //         (normalizedDirection.x * 1000 + normalizedStart.x) * Constants.CELL_SIZE,
+        //         (normalizedDirection.y * 1000 + normalizedStart.y) * Constants.CELL_SIZE))
 
         return new Vector2(
             (normalizedDirection.x * 1000 + normalizedStart.x) * Constants.CELL_SIZE,

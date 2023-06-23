@@ -16,7 +16,6 @@
 
     public changeState(state: E): void {
         if (this._currentState === state) return
-        console.log("changed to state: " + state)
 
         for (let i = 0; i < this.onExitCallbacks.length; i++)
         {
