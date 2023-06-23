@@ -42,7 +42,7 @@ class ButtonPrefab extends NineSlice
         this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
             this.clicked.invoke()
         })
-        
+
         this.text = this.scene.add.text(this.x, this.y, "Text")
         this.text.setColor('0x000000')
         this.text.setOrigin(0.5, 0.5)
@@ -66,8 +66,7 @@ class ButtonPrefab extends NineSlice
         this.x = mainCamera.midPoint.x + mainCamera.displayWidth * (anchorX - 0.5)
         this.y = mainCamera.midPoint.y + mainCamera.displayHeight * (anchorY - 0.5)
 
-        this.text.x = this.x
-        this.text.y = this.y
+        this.adjustText()
     }
 
     // Relative to the anchor
@@ -76,19 +75,27 @@ class ButtonPrefab extends NineSlice
 
         this.setOrigin(pivotX, pivotY)
 
-        this.text.x = this.x
-        this.text.y = this.y
+        this.adjustText()
     }
 
     // Relative to the pivot, in pixels
     public setOffset(offsetX: number, offsetY: number): void {
         this.offset = new Vector2(offsetX, offsetY)
-
+        
         this.x += offsetX
         this.y += offsetY
 
-        this.text.x = this.x
-        this.text.y = this.y
+        this.adjustText()
+    }
+
+    private adjustText(): void {
+
+        if (this.getCenter())
+        {
+            const center = this.getCenter()
+            this.text.x = center.x as number
+            this.text.y = center.y as number
+        }
     }
 }
 
