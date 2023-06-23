@@ -16,7 +16,7 @@ class SpotLight extends Sprite
 {
     public stateMachine: StateMachine<LightState> = new StateMachine<LightState>(LightState.Init)
 
-    public direction: Vector2
+    public direction: Vector2 = new Vector2()
     public scene: PlayScene
 
     private lightPolygon: Polygon
@@ -34,10 +34,11 @@ class SpotLight extends Sprite
         this.stateMachine.changeState(LightState.Moving)
         this.scale = 0.1
 
+        Phaser.Math.RandomXY(this.direction)
+
         this.on(Phaser.Input.Events.GAMEOBJECT_DRAG_START, () => {
             this.stateMachine.changeState(LightState.Moving)
         })
-
     }
 
     public handlePointerUp(): void {
@@ -57,6 +58,7 @@ class SpotLight extends Sprite
         {
             case LightState.Moving:
                 this.setPosition(pointerPosition.x, pointerPosition.y)
+                this.castLight()
                 break
             case LightState.Rotating:
                 this.direction = pointerPosition.clone().subtract(new Vector2(this.x, this.y)).normalize()
