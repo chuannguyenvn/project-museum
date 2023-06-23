@@ -18,7 +18,9 @@
           "y": 0
         }
       }
-    ]
+    ],
+    "wallColor": "2b313d",
+    "groundColor" : "0a0d12"
   },
   {
     "levelNumber": 2

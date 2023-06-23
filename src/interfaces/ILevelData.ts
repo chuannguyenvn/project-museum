@@ -7,6 +7,8 @@ interface ILevelData
     wallLayout: IVectorLike[][]
     cornerLayout: IVectorLike[][]
     paintingLayout: IPaintingLayoutData[]
+    wallColor: string
+    groundColor: string
 }
 
 interface IPaintingLayoutData

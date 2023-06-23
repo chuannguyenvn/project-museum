@@ -1,6 +1,7 @@
 ﻿import GameObject = Phaser.GameObjects.GameObject
 import Vector2 = Phaser.Math.Vector2
 import Polygon = Phaser.GameObjects.Polygon
+import Color = Phaser.Display.Color
 import PlayScene from "../../scenes/PlayScene"
 import GameObjectType from "../../configs/GameObjectType"
 import Constants from "../../configs/Constants"
@@ -20,7 +21,7 @@ class WallBlock extends GameObject
 
     private wallPolygon: Polygon
 
-    constructor(scene: PlayScene, normalizedCellPositions: IVectorLike[], normalizedCornerPositions: IVectorLike[]) {
+    constructor(scene: PlayScene, normalizedCellPositions: IVectorLike[], normalizedCornerPositions: IVectorLike[], colorString: string) {
         super(scene, GameObjectType.WALL)
         scene.add.existing(this)
 
@@ -37,8 +38,8 @@ class WallBlock extends GameObject
         this.worldCornerPositions = query(normalizedCornerPositions)
             .select((vectorLike) => new Vector2((vectorLike.x) * Constants.CELL_SIZE, (vectorLike.y) * Constants.CELL_SIZE))
             .toArray()
-        
-        this.wallPolygon = scene.add.polygon(0, 0, this.worldCornerPositions, 0xffffff)
+
+        this.wallPolygon = scene.add.polygon(0, 0, this.worldCornerPositions, Color.HexStringToColor(colorString).color)
         this.wallPolygon.setOrigin(0, 0)
     }
 }

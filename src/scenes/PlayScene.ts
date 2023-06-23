@@ -18,7 +18,7 @@ class PlayScene extends Phaser.Scene
     public paintingLit: GameEvent = new GameEvent()
     public paintingUnlit: GameEvent = new GameEvent()
     public gameWon: GameEvent = new GameEvent()
-    
+
     public currentLevel: ILevelData
 
     public allBlocks: WallBlock[]
@@ -67,7 +67,7 @@ class PlayScene extends Phaser.Scene
 
         for (let i = 0; i < this.currentLevel.wallLayout.length; i++)
         {
-            const wallBlock = new WallBlock(this, this.currentLevel.wallLayout[i], this.currentLevel.cornerLayout[i])
+            const wallBlock = new WallBlock(this, this.currentLevel.wallLayout[i], this.currentLevel.cornerLayout[i], this.currentLevel.wallColor)
             this.allBlocks.push(wallBlock)
 
             this.allWorldCorners = this.allWorldCorners.concat(wallBlock.worldCornerPositions)
@@ -87,11 +87,12 @@ class PlayScene extends Phaser.Scene
             this.allPaintings.push(painting)
         }
 
-        console.log(this.currentLevel.paintingLayout.length)
         this.paintingUnlitCount = this.currentLevel.paintingLayout.length
 
-        new Boundary(this, Convert.ToVector2(this.currentLevel.levelSize))
+        new Boundary(this, Convert.ToVector2(this.currentLevel.levelSize), this.currentLevel.wallColor)
 
+        this.cameras.main.backgroundColor = Color.HexStringToColor(this.currentLevel.groundColor)
+        
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
             const pointerScreenPosition = this.input.activePointer.position.clone()
             this.light.handlePointerMove(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))
@@ -114,8 +115,8 @@ class PlayScene extends Phaser.Scene
     private paintingUnlitHandler(): void {
         this.paintingUnlitCount++
     }
-    
-    private gameWonHandler() : void{
+
+    private gameWonHandler(): void {
         console.log("WON")
     }
 }

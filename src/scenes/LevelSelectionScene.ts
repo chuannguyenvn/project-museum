@@ -24,10 +24,10 @@ class LevelSelectionScene extends Scene
         }
     }
 
-    private changeToPlayScene(selectedLevelNumber: number): void {
+    private changeToPlayScene(selectedLevelIndex: number): void {
         this.scene.stop(SceneKey.LEVEL_SELECTION)
         this.scene.start(SceneKey.PLAY, {
-            selectedLevel: selectedLevelNumber
+            selectedLevelIndex: selectedLevelIndex
         })
     }
 }
