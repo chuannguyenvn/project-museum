@@ -59,12 +59,247 @@
     "groundColor": "0a0d12"
   },
   {
-    "levelNumber": 3
+    "levelNumber": 3,
+    "levelSize": {
+      "x": 16,
+      "y": 8
+    },
+    "wallLayout": [],
+    "cornerLayout": [],
+    "paintingLayout": [
+      {
+        "position": {
+          "x": 4,
+          "y": 0
+        },
+        "size": {
+          "x": 2,
+          "y": 0
+        },
+        "color": "ff0000"
+      },
+      {
+        "position": {
+          "x": 8,
+          "y": 0
+        },
+        "size": {
+          "x": 2,
+          "y": 0
+        },
+        "color": "ff0000"
+      },
+      {
+        "position": {
+          "x": 12,
+          "y": 0
+        },
+        "size": {
+          "x": 2,
+          "y": 0
+        },
+        "color": "ff0000"
+      }
+    ],
+    "wallColor": "2b313d",
+    "groundColor": "0a0d12"
   },
   {
-    "levelNumber": 4
+    "levelNumber": 4,
+    "levelSize": {
+      "x": 16,
+      "y": 6
+    },
+    "wallLayout": [
+      [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 2
+        },
+        {
+          "x": 0,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 3
+        }
+      ]
+    ],
+    "cornerLayout": [
+      [
+        {
+          "x": 0,
+          "y": 4
+        },
+        {
+          "x": 2,
+          "y": 4
+        },
+        {
+          "x": 2,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 0
+        }
+      ]
+    ],
+    "paintingLayout": [
+      {
+        "position": {
+          "x": 4,
+          "y": 1
+        },
+        "size": {
+          "x": 0,
+          "y": 2
+        },
+        "color": "ff0000"
+      },
+      {
+        "position": {
+          "x": 2,
+          "y": 3
+        },
+        "size": {
+          "x": 0,
+          "y": 2
+        },
+        "color": "ff0000"
+      },
+      {
+        "position": {
+          "x": 0,
+          "y": 5
+        },
+        "size": {
+          "x": 0,
+          "y": 2
+        },
+        "color": "ff0000"
+      }
+    ],
+    "wallColor": "2b313d",
+    "groundColor": "0a0d12"
   },
   {
-    "levelNumber": 5
+    "levelNumber": 5,
+    "levelSize": {
+      "x": 8,
+      "y": 8
+    },
+    "wallLayout": [
+      [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 6
+        },
+        {
+          "x": 6,
+          "y": 6
+        }
+        
+      ]
+    ],
+    "cornerLayout": [
+      [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 7
+        },
+        {
+          "x": 7,
+          "y": 7
+        },
+        {
+          "x": 7,
+          "y": 5
+        }
+      ]
+    ],
+    "paintingLayout": [
+      {
+        "position": {
+          "x": 6,
+          "y": 5
+        },
+        "size": {
+          "x": 2,
+          "y": 0
+        },
+        "color": "ff0000"
+      },
+      {
+        "position": {
+          "x": 5,
+          "y": 6
+        },
+        "size": {
+          "x": 0,
+          "y": 2
+        },
+        "color": "ff0000"
+      }
+    ],
+    "wallColor": "2b313d",
+    "groundColor": "0a0d12"
   }
 ]

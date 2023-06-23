@@ -17,7 +17,7 @@ class LevelSelectionScene extends Scene
         for (let i = 0; i < FileLookUp[JsonKey.LEVEL_DATA].length; i++)
         {
             const levelButton = new LevelButton(this, i + 1)
-            levelButton.setOffset(i * 200, 0)
+            levelButton.setOffset(i * 200 - 500, 0)
             levelButton.clicked.subscribe(() => {
                 this.changeToPlayScene(i)
             })
