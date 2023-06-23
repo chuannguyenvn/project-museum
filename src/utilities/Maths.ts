@@ -17,6 +17,16 @@ class Maths
 
         return Math.abs(pointToFirst + pointToSecond - firstToSecond) < Phaser.Math.EPSILON
     }
+    
+    public static clampLength(vector: Vector2, maxLength: number): Vector2
+    {
+        vector = vector.clone()
+        if (vector.length() > maxLength)
+        {
+            vector = vector.scale(vector.length() / maxLength)
+        }
+        return vector
+    }
 }
 
 export default Maths

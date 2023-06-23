@@ -47,6 +47,7 @@ class PlayScene extends Phaser.Scene
 
     private create(): void {
         this.adjustCamera()
+        this.initializePhysics()
         this.initializeWallsAndBoundaries()
         this.initializePaintings()
         this.initializeLights()
@@ -54,10 +55,19 @@ class PlayScene extends Phaser.Scene
     }
 
     private adjustCamera(): void {
-        this.cameras.main.zoom = 0.5
+        this.cameras.main.zoom = 1
         this.cameras.main.centerOn(this.currentLevel.levelSize.x * Constants.CELL_SIZE / 2,
             this.currentLevel.levelSize.y * Constants.CELL_SIZE / 2)
         this.cameras.main.backgroundColor = Color.HexStringToColor(this.currentLevel.groundColor)
+    }
+
+    private initializePhysics(): void {
+        this.matter.world.setBounds(
+            0,
+            0,
+            this.currentLevel.levelSize.x * Constants.CELL_SIZE,
+            this.currentLevel.levelSize.y * Constants.CELL_SIZE,
+            10000)
     }
 
     private initializeWallsAndBoundaries(): void {
@@ -106,16 +116,11 @@ class PlayScene extends Phaser.Scene
     }
 
     private initializeLights(): void {
-        this.light = new SpotLight(this)
-        this.input.setDraggable(this.light)
+        this.light = new SpotLight(this, this.matter.world)
+        this.light.setPosition(100, 100)
     }
 
     private initializeEvents(): void {
-        this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
-            const pointerScreenPosition = this.input.activePointer.position.clone()
-            this.light.handlePointerMove(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))
-        })
-
         this.input.on(Phaser.Input.Events.POINTER_UP, () => {
             this.light.handlePointerUp()
         })
@@ -136,6 +141,11 @@ class PlayScene extends Phaser.Scene
 
     private gameWonHandler(): void {
         console.log("WON")
+    }
+
+    update(time: number, delta: number) {
+        const pointerScreenPosition = this.input.activePointer.position.clone()
+        this.light.update(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))
     }
 }
 

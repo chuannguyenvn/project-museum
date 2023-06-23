@@ -1,7 +1,8 @@
 import Vector2 = Phaser.Math.Vector2
-import Sprite = Phaser.GameObjects.Sprite
 import Line = Phaser.GameObjects.Line
 import Arc = Phaser.GameObjects.Arc
+import Sprite = Phaser.Physics.Matter.Sprite
+import World = Phaser.Physics.Matter.World
 import PlayScene from "../../scenes/PlayScene"
 import Constants from "../../configs/Constants"
 import SpriteKey from "../../configs/SpriteKey"
@@ -25,8 +26,8 @@ class SpotLight extends Sprite
 
     private normalizedPosition: Vector2
 
-    constructor(scene: PlayScene) {
-        super(scene, 0, 0, SpriteKey.LIGHT)
+    constructor(scene: PlayScene, world: World) {
+        super(world, 0, 0, SpriteKey.LIGHT)
         scene.add.existing(this)
 
         this.scene = scene
@@ -38,11 +39,16 @@ class SpotLight extends Sprite
 
         this.lightArea = new LightArea(this.scene, [new Vector2(0, 0)])
 
+        this.setCircle(10)
+        this.setFixedRotation()
+
         this.setInteractive()
 
         this.on(Phaser.Input.Events.GAMEOBJECT_DRAG_START, () => {
             this.stateMachine.changeState(LightState.Moving)
         })
+
+        this.setPosition(100, 100)
     }
 
     public handlePointerUp(): void {
@@ -57,15 +63,17 @@ class SpotLight extends Sprite
         }
     }
 
-    public handlePointerMove(pointerPosition: Vector2): void {
+    public update(pointerPosition: Vector2): void {
         switch (this.stateMachine.currentState)
         {
             case LightState.Moving:
-                this.setPosition(pointerPosition.x, pointerPosition.y)
+                const velocity = Maths.clampLength(new Vector2((pointerPosition.x - this.x), (pointerPosition.y - this.y)), 1000)
+                this.setVelocity(velocity.x, velocity.y)
                 this.castLight()
                 break
             case LightState.Rotating:
                 this.direction = pointerPosition.clone().subtract(new Vector2(this.x, this.y)).normalize()
+                this.setVelocity(0, 0)
                 this.castLight()
                 break
         }
