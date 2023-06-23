@@ -13,7 +13,7 @@ class PlayButton extends ButtonPrefab
         this.setAnchor(0.5, 1)
         this.setPivot(0.5, 1)
         this.setOffset(0, -100)
-        
+
         this.text.text = "Play"
     }
 }

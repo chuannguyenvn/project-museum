@@ -52,12 +52,6 @@ class ButtonPrefab extends NineSlice
         this.setPivot(0.5, 0.5)
     }
 
-    private handleWindowSizeChange(): void {
-        this.setAnchor(this.anchor.x, this.anchor.y)
-        this.setPivot(this.pivot.x, this.pivot.y)
-        this.setOffset(this.offset.x, this.offset.y)
-    }
-
     // Relative to the screen
     public setAnchor(anchorX: number, anchorY: number): void {
         this.anchor = new Vector2(anchorX, anchorY)
@@ -81,11 +75,17 @@ class ButtonPrefab extends NineSlice
     // Relative to the pivot, in pixels
     public setOffset(offsetX: number, offsetY: number): void {
         this.offset = new Vector2(offsetX, offsetY)
-        
+
         this.x += offsetX
         this.y += offsetY
 
         this.adjustText()
+    }
+
+    private handleWindowSizeChange(): void {
+        this.setAnchor(this.anchor.x, this.anchor.y)
+        this.setPivot(this.pivot.x, this.pivot.y)
+        this.setOffset(this.offset.x, this.offset.y)
     }
 
     private adjustText(): void {

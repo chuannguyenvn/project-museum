@@ -10,7 +10,7 @@ class Painting extends Rectangle
     private playScene: PlayScene
 
     private isFullyLit: boolean = false
-    
+
     constructor(scene: PlayScene, normalizedPosition: Vector2, size: Vector2, color: Color) {
         super(
             scene,
@@ -43,7 +43,7 @@ class Painting extends Rectangle
 
     public setLightStatus(isFullyLit: boolean): void {
         if (this.isFullyLit === isFullyLit) return
-        
+
         if (isFullyLit)
         {
             this.fillColor = new Color(255, 0, 0).color
@@ -54,7 +54,7 @@ class Painting extends Rectangle
             this.fillColor = new Color(0, 0, 0).color
             this.playScene.paintingUnlit.invoke()
         }
-        
+
         this.isFullyLit = isFullyLit
     }
 }

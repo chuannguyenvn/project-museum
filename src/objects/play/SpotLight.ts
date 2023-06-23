@@ -1,6 +1,5 @@
 import Vector2 = Phaser.Math.Vector2
 import Sprite = Phaser.GameObjects.Sprite
-import Polygon = Phaser.GameObjects.Polygon
 import Line = Phaser.GameObjects.Line
 import Arc = Phaser.GameObjects.Arc
 import PlayScene from "../../scenes/PlayScene"
@@ -38,7 +37,7 @@ class SpotLight extends Sprite
         Phaser.Math.RandomXY(this.direction)
 
         this.lightArea = new LightArea(this.scene, [new Vector2(0, 0)])
-        
+
         this.setInteractive()
 
         this.on(Phaser.Input.Events.GAMEOBJECT_DRAG_START, () => {
@@ -74,7 +73,6 @@ class SpotLight extends Sprite
 
     public castLight(): void {
         this.resetDebugVisuals()
-
         this.calculatePosition()
         this.castAgainstWalls()
         this.castAgainstPaintings()
