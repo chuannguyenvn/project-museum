@@ -4,6 +4,7 @@ import {Scene} from "phaser"
 import NineSlice = Phaser.GameObjects.NineSlice
 import Color = Phaser.Display.Color
 import Vector2 = Phaser.Math.Vector2
+import Text = Phaser.GameObjects.Text
 
 class ButtonPrefab extends NineSlice
 {
@@ -11,6 +12,8 @@ class ButtonPrefab extends NineSlice
     public pointerOverTint: Color = new Color(225, 225, 225)
     public pointerOutTint: Color = new Color(255, 255, 255)
     public pointerDownTint: Color = new Color(160, 160, 160)
+
+    protected text: Text
 
     private anchor: Vector2 = new Vector2(0.5, 0.5)
     private pivot: Vector2 = new Vector2(0.5, 0.5)
@@ -40,6 +43,11 @@ class ButtonPrefab extends NineSlice
             this.clicked.invoke()
         })
         
+        this.text = this.scene.add.text(this.x, this.y, "Text")
+        this.text.setColor('0x000000')
+        this.text.setOrigin(0.5, 0.5)
+        this.text.depth = 10001
+
         this.setAnchor(0.5, 0.5)
         this.setPivot(0.5, 0.5)
     }
@@ -57,6 +65,9 @@ class ButtonPrefab extends NineSlice
         const mainCamera = this.scene.cameras.main
         this.x = mainCamera.midPoint.x + mainCamera.displayWidth * (anchorX - 0.5)
         this.y = mainCamera.midPoint.y + mainCamera.displayHeight * (anchorY - 0.5)
+
+        this.text.x = this.x
+        this.text.y = this.y
     }
 
     // Relative to the anchor
@@ -64,6 +75,9 @@ class ButtonPrefab extends NineSlice
         this.pivot = new Vector2(pivotX, pivotY)
 
         this.setOrigin(pivotX, pivotY)
+
+        this.text.x = this.x
+        this.text.y = this.y
     }
 
     // Relative to the pivot, in pixels
@@ -72,6 +86,9 @@ class ButtonPrefab extends NineSlice
 
         this.x += offsetX
         this.y += offsetY
+
+        this.text.x = this.x
+        this.text.y = this.y
     }
 }
 
