@@ -9,7 +9,7 @@ class Painting extends Rectangle
     public readonly paintingRaycastPoints: Vector2[] = []
     private playScene: PlayScene
 
-    private isFullyLit: boolean = false
+    private isFullyLit: boolean = true
 
     constructor(scene: PlayScene, normalizedPosition: Vector2, size: Vector2, color: Color) {
         super(
@@ -30,6 +30,9 @@ class Painting extends Rectangle
             {
                 this.paintingRaycastPoints.push(offsetNormalizedPosition.clone().add(new Vector2(0, y)).scale(Constants.CELL_SIZE))
             }
+            
+            this.paintingRaycastPoints[0].y += Constants.SLIGHTLY_WORSE_EPSILON
+            this.paintingRaycastPoints[this.paintingRaycastPoints.length - 1].y -= Constants.SLIGHTLY_WORSE_EPSILON
         }
         else
         {
@@ -38,9 +41,13 @@ class Painting extends Rectangle
             {
                 this.paintingRaycastPoints.push(offsetNormalizedPosition.clone().add(new Vector2(x, 0)).scale(Constants.CELL_SIZE))
             }
+
+            this.paintingRaycastPoints[0].x += Constants.SLIGHTLY_WORSE_EPSILON
+            this.paintingRaycastPoints[this.paintingRaycastPoints.length - 1].x -= Constants.SLIGHTLY_WORSE_EPSILON
         }
 
         this.setDepth(1000)
+        this.setLightStatus(false)
     }
 
     public setLightStatus(isFullyLit: boolean): void {
