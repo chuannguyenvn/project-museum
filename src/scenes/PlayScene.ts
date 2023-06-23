@@ -26,6 +26,8 @@ class PlayScene extends Phaser.Scene
     public allPaintings: Painting[]
     public blockFlags: boolean[][]
 
+    
+    
     public light: SpotLight
     private paintingUnlitCount: number = 0
 

@@ -15,6 +15,7 @@ interface IPaintingLayoutData
 {
     position: IVectorLike
     size: IVectorLike
+    color: string
 }
 
 export default ILevelData
