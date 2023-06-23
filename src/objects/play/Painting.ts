@@ -7,7 +7,10 @@ import Constants from "../../configs/Constants"
 class Painting extends Rectangle
 {
     public readonly paintingRaycastPoints: Vector2[] = []
+    private playScene: PlayScene
 
+    private isFullyLit: boolean = false
+    
     constructor(scene: PlayScene, normalizedPosition: Vector2, size: Vector2, color: Color) {
         super(
             scene,
@@ -17,6 +20,8 @@ class Painting extends Rectangle
             size.y === 0 ? Constants.PAINTING_THICKNESS : size.y * Constants.CELL_SIZE,
             color.color)
         this.scene.add.existing(this)
+
+        this.playScene = scene
 
         if (size.x === 0)
         {
@@ -36,9 +41,21 @@ class Painting extends Rectangle
         }
     }
 
-    public setLightStatus(isFullyLighted: boolean): void {
-        if (isFullyLighted) this.fillColor = new Color(255, 0, 0).color
-        else this.fillColor = new Color(0, 0, 0).color
+    public setLightStatus(isFullyLit: boolean): void {
+        if (this.isFullyLit === isFullyLit) return
+        
+        if (isFullyLit)
+        {
+            this.fillColor = new Color(255, 0, 0).color
+            this.playScene.paintingLit.invoke()
+        }
+        else
+        {
+            this.fillColor = new Color(0, 0, 0).color
+            this.playScene.paintingUnlit.invoke()
+        }
+        
+        this.isFullyLit = isFullyLit
     }
 }
 

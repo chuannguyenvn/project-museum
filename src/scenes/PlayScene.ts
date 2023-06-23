@@ -8,13 +8,17 @@ import Painting from "../objects/play/Painting"
 import Convert from "../utilities/Convert"
 import Boundary from "../objects/play/Boundary"
 import Constants from "../configs/Constants"
-import PlaceButton from "../objects/play/PlaceButton"
 import SceneKey from "../configs/SceneKey"
+import {GameEvent} from "../utilities/Event"
 import Vector2 = Phaser.Math.Vector2
 import Color = Phaser.Display.Color
 
 class PlayScene extends Phaser.Scene
 {
+    public paintingLit: GameEvent = new GameEvent()
+    public paintingUnlit: GameEvent = new GameEvent()
+    public gameWon: GameEvent = new GameEvent()
+    
     public currentLevel: ILevelData
 
     public allBlocks: WallBlock[]
@@ -23,15 +27,12 @@ class PlayScene extends Phaser.Scene
     public blockFlags: boolean[][]
 
     public light: SpotLight
+    private paintingUnlitCount: number = 0
 
     constructor() {
         super({
             key: SceneKey.PLAY
         })
-    }
-
-    private init(data: object): void {
-        console.log(data)
     }
 
     private preload(): void {
@@ -86,6 +87,9 @@ class PlayScene extends Phaser.Scene
             this.allPaintings.push(painting)
         }
 
+        console.log(this.currentLevel.paintingLayout.length)
+        this.paintingUnlitCount = this.currentLevel.paintingLayout.length
+
         new Boundary(this, Convert.ToVector2(this.currentLevel.levelSize))
 
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
@@ -96,6 +100,23 @@ class PlayScene extends Phaser.Scene
         this.input.on(Phaser.Input.Events.POINTER_UP, () => {
             this.light.handlePointerUp()
         })
+
+        this.paintingLit.subscribe(this.paintingLitHandler.bind(this))
+        this.paintingUnlit.subscribe(this.paintingUnlitHandler.bind(this))
+        this.gameWon.subscribe(this.gameWonHandler.bind(this))
+    }
+
+    private paintingLitHandler(): void {
+        this.paintingUnlitCount--
+        if (this.paintingUnlitCount === 0) this.gameWon.invoke()
+    }
+
+    private paintingUnlitHandler(): void {
+        this.paintingUnlitCount++
+    }
+    
+    private gameWonHandler() : void{
+        console.log("WON")
     }
 }
 
