@@ -1,5 +1,4 @@
 ﻿import WallBlock from "../objects/play/WallBlock"
-import GameManager from "../managers/GameManager"
 import ILevelData from "../interfaces/ILevelData"
 import SpotLight from "../objects/play/SpotLight"
 import SpriteKey from "../configs/SpriteKey"
@@ -11,9 +10,9 @@ import Constants from "../configs/Constants"
 import SceneKey from "../configs/SceneKey"
 import {GameEvent} from "../utilities/Event"
 import Phaser from "phaser"
+import JsonKey from "../configs/JsonKey"
 import Vector2 = Phaser.Math.Vector2
 import Color = Phaser.Display.Color
-import JsonKey from "../configs/JsonKey"
 
 class PlayScene extends Phaser.Scene
 {
@@ -27,8 +26,8 @@ class PlayScene extends Phaser.Scene
     public allWorldCorners: Vector2[]
     public allPaintings: Painting[]
     public blockFlags: boolean[][]
-
     public light: SpotLight
+    private boundary: Boundary
     private paintingUnlitCount: number = 0
 
     constructor() {
@@ -47,16 +46,23 @@ class PlayScene extends Phaser.Scene
     }
 
     private create(): void {
+        this.adjustCamera()
+        this.initializeWallsAndBoundaries()
+        this.initializePaintings()
+        this.initializeLights()
+        this.initializeEvents()
+    }
+
+    private adjustCamera(): void {
         this.cameras.main.zoom = 0.5
         this.cameras.main.centerOn(this.currentLevel.levelSize.x * Constants.CELL_SIZE / 2,
             this.currentLevel.levelSize.y * Constants.CELL_SIZE / 2)
+        this.cameras.main.backgroundColor = Color.HexStringToColor(this.currentLevel.groundColor)
+    }
 
-        this.light = new SpotLight(this)
-        this.input.setDraggable(this.light)
-
+    private initializeWallsAndBoundaries(): void {
         this.allBlocks = []
         this.allWorldCorners = []
-        this.allPaintings = []
         this.blockFlags = []
 
         for (let x = 0; x < this.currentLevel.levelSize.x; x++)
@@ -82,6 +88,12 @@ class PlayScene extends Phaser.Scene
             }
         }
 
+        this.boundary = new Boundary(this, Convert.ToVector2(this.currentLevel.levelSize), this.currentLevel.wallColor)
+    }
+
+    private initializePaintings(): void {
+        this.allPaintings = []
+
         for (let i = 0; i < this.currentLevel.paintingLayout.length; i++)
         {
             const paintingPosition = Convert.ToVector2(this.currentLevel.paintingLayout[i].position)
@@ -91,11 +103,14 @@ class PlayScene extends Phaser.Scene
         }
 
         this.paintingUnlitCount = this.currentLevel.paintingLayout.length
+    }
 
-        new Boundary(this, Convert.ToVector2(this.currentLevel.levelSize), this.currentLevel.wallColor)
+    private initializeLights(): void {
+        this.light = new SpotLight(this)
+        this.input.setDraggable(this.light)
+    }
 
-        this.cameras.main.backgroundColor = Color.HexStringToColor(this.currentLevel.groundColor)
-
+    private initializeEvents(): void {
         this.input.on(Phaser.Input.Events.POINTER_MOVE, () => {
             const pointerScreenPosition = this.input.activePointer.position.clone()
             this.light.handlePointerMove(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))
