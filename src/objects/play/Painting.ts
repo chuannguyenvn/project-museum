@@ -33,10 +33,10 @@ class Painting extends Rectangle
         }
         else
         {
-            const nomalizedPosition = normalizedPosition.subtract(new Vector2(size.x / 2, 0))
+            const offsetNormalizedPosition = normalizedPosition.subtract(new Vector2(size.x / 2, 0))
             for (let x = 0; x <= size.x; x++)
             {
-                this.paintingRaycastPoints.push(nomalizedPosition.clone().add(new Vector2(x, 0)).scale(Constants.CELL_SIZE))
+                this.paintingRaycastPoints.push(offsetNormalizedPosition.clone().add(new Vector2(x, 0)).scale(Constants.CELL_SIZE))
             }
         }
 
