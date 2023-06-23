@@ -21,10 +21,42 @@
       }
     ],
     "wallColor": "2b313d",
-    "groundColor" : "0a0d12"
+    "groundColor": "0a0d12"
   },
   {
-    "levelNumber": 2
+    "levelNumber": 2,
+    "levelSize": {
+      "x": 12,
+      "y": 5
+    },
+    "wallLayout": [],
+    "cornerLayout": [],
+    "paintingLayout": [
+      {
+        "position": {
+          "x": 4,
+          "y": 0
+        },
+        "size": {
+          "x": 2,
+          "y": 0
+        },
+        "color": "ff0000"
+      },
+      {
+        "position": {
+          "x": 8,
+          "y": 0
+        },
+        "size": {
+          "x": 2,
+          "y": 0
+        },
+        "color": "ff0000"
+      }
+    ],
+    "wallColor": "2b313d",
+    "groundColor": "0a0d12"
   },
   {
     "levelNumber": 3

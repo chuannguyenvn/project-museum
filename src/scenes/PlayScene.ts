@@ -13,6 +13,7 @@ import {GameEvent} from "../utilities/Event"
 import Phaser from "phaser"
 import Vector2 = Phaser.Math.Vector2
 import Color = Phaser.Display.Color
+import JsonKey from "../configs/JsonKey"
 
 class PlayScene extends Phaser.Scene
 {
@@ -36,14 +37,16 @@ class PlayScene extends Phaser.Scene
         })
     }
 
+    private init(data: any): void {
+        this.currentLevel = FileLookUp[JsonKey.LEVEL_DATA][data.selectedLevelIndex] as ILevelData
+    }
+
     private preload(): void {
         this.load.image(SpriteKey.LIGHT, FileLookUp[SpriteKey.LIGHT])
         this.load.image(SpriteKey.DEFAULT_BUTTON, FileLookUp[SpriteKey.DEFAULT_BUTTON])
     }
 
     private create(): void {
-        this.currentLevel = GameManager.GetCurrentLevel()
-
         this.cameras.main.zoom = 0.5
         this.cameras.main.centerOn(this.currentLevel.levelSize.x * Constants.CELL_SIZE / 2,
             this.currentLevel.levelSize.y * Constants.CELL_SIZE / 2)
