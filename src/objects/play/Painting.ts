@@ -25,10 +25,10 @@ class Painting extends Rectangle
 
         if (size.x === 0)
         {
-            const nomalizedPosition = normalizedPosition.subtract(new Vector2(0, size.y / 2))
+            const offsetNormalizedPosition = normalizedPosition.subtract(new Vector2(0, size.y / 2))
             for (let y = 0; y <= size.y; y++)
             {
-                this.paintingRaycastPoints.push(nomalizedPosition.clone().add(new Vector2(0, y)).scale(Constants.CELL_SIZE))
+                this.paintingRaycastPoints.push(offsetNormalizedPosition.clone().add(new Vector2(0, y)).scale(Constants.CELL_SIZE))
             }
         }
         else
@@ -39,6 +39,8 @@ class Painting extends Rectangle
                 this.paintingRaycastPoints.push(nomalizedPosition.clone().add(new Vector2(x, 0)).scale(Constants.CELL_SIZE))
             }
         }
+
+        this.setDepth(1000)
     }
 
     public setLightStatus(isFullyLit: boolean): void {

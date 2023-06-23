@@ -36,6 +36,11 @@ class PlayScene extends Phaser.Scene
         })
     }
 
+    update(time: number, delta: number) {
+        const pointerScreenPosition = this.input.activePointer.position.clone()
+        this.light.update(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))
+    }
+
     private init(data: any): void {
         this.currentLevel = FileLookUp[JsonKey.LEVEL_DATA][data.selectedLevelIndex] as ILevelData
     }
@@ -142,11 +147,6 @@ class PlayScene extends Phaser.Scene
 
     private gameWonHandler(): void {
         console.log("WON")
-    }
-
-    update(time: number, delta: number) {
-        const pointerScreenPosition = this.input.activePointer.position.clone()
-        this.light.update(this.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y))
     }
 }
 

@@ -25,7 +25,7 @@ class LightArea extends Polygon
             const pointerWorldPosition = scene.cameras.main.getWorldPoint(pointerScreenPosition.x, pointerScreenPosition.y)
             const lightToPointerDirection = pointerWorldPosition.clone().subtract(new Vector2(ownerLight.x, ownerLight.y)).normalize()
             ownerLight.directionAngleOffset = Maths.SignedDegreeAngleBetween(ownerLight.direction, lightToPointerDirection)
-            
+
             console.log(ownerLight.direction)
             console.log(lightToPointerDirection)
             console.log(ownerLight.directionAngleOffset)

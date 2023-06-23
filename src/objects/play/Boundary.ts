@@ -21,7 +21,7 @@ class Boundary extends GameObject
 
         for (let i = 0; i < this.walls.length; i++)
         {
-            this.walls[i].depth = 1000
+            this.walls[i].depth = 5000
             scene.add.existing(this.walls[i])
             scene.matter.add.rectangle(this.walls[i].x, this.walls[i].y, this.walls[i].width, this.walls[i].height)
         }
