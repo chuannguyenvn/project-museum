@@ -2,7 +2,6 @@ import Vector2 = Phaser.Math.Vector2
 import Line = Phaser.GameObjects.Line
 import Arc = Phaser.GameObjects.Arc
 import Sprite = Phaser.Physics.Matter.Sprite
-import World = Phaser.Physics.Matter.World
 import PlayScene from "../../scenes/PlayScene"
 import Constants from "../../configs/Constants"
 import SpriteKey from "../../configs/SpriteKey"
@@ -18,9 +17,10 @@ class SpotLight extends Sprite
     public stateMachine: StateMachine<LightState> = new StateMachine<LightState>(LightState.Init)
 
     public direction: Vector2 = new Vector2()
+    public directionAngleOffset: number = 0
     public scene: PlayScene
 
-    public readonly lightArea: LightArea
+    public lightArea: LightArea
     private raycastLines: Line[] = []
     private raycastArc: Arc[] = []
 
@@ -37,25 +37,28 @@ class SpotLight extends Sprite
 
         Phaser.Math.RandomXY(this.direction)
 
-        this.lightArea = new LightArea(this.scene, [new Vector2(0, 0)])
+        this.lightArea = new LightArea(this.scene, this)
 
         this.setCircle(10)
         this.setFixedRotation()
 
         this.setInteractive()
+        this.scene.input.setDraggable(this)
 
         this.on(Phaser.Input.Events.GAMEOBJECT_DRAG_START, () => {
             this.stateMachine.changeState(LightState.Moving)
         })
 
         this.setPosition(100, 100)
+
+        this.stateMachine.configure(LightState.Idle).onEntry(-1, () => this.setVelocity(0, 0))
     }
 
     public handlePointerUp(): void {
         switch (this.stateMachine.currentState)
         {
             case LightState.Moving:
-                this.stateMachine.changeState(LightState.Rotating)
+                this.stateMachine.changeState(LightState.Idle)
                 break
             case LightState.Rotating:
                 this.stateMachine.changeState(LightState.Idle)
@@ -72,7 +75,7 @@ class SpotLight extends Sprite
                 this.castLight()
                 break
             case LightState.Rotating:
-                this.direction = pointerPosition.clone().subtract(new Vector2(this.x, this.y)).normalize()
+                this.direction = pointerPosition.clone().subtract(new Vector2(this.x, this.y)).normalize().rotate(this.directionAngleOffset * Phaser.Math.DEG_TO_RAD)
                 this.setVelocity(0, 0)
                 this.castLight()
                 break
@@ -246,7 +249,10 @@ class SpotLight extends Sprite
         lightPolygonPath.push(this.raycast(this.normalizedPosition.clone(), this.direction.clone().rotate(-Phaser.Math.DEG_TO_RAD * Constants.LIGHT_SPREAD_ANGLE / 2)))
         lightPolygonPath.push(new Vector2(this.x, this.y))
 
-        this.lightArea.setTo(lightPolygonPath)
+        // VERY BAD //
+        this.lightArea.destroy()
+        this.lightArea = new LightArea(this.scene, this)
+        this.lightArea.changeShape(lightPolygonPath)
     }
 
     private castAgainstPaintings(): void {
@@ -294,4 +300,4 @@ enum LightState
     Idle,
 }
 
-export default SpotLight
+export {SpotLight, LightState}

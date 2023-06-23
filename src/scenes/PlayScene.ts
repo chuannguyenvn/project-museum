@@ -1,6 +1,6 @@
 ﻿import WallBlock from "../objects/play/WallBlock"
 import ILevelData from "../interfaces/ILevelData"
-import SpotLight from "../objects/play/SpotLight"
+import {SpotLight} from "../objects/play/SpotLight"
 import SpriteKey from "../configs/SpriteKey"
 import FileLookUp from "../configs/FileLookUp"
 import Painting from "../objects/play/Painting"
