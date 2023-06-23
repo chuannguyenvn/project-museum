@@ -16,7 +16,7 @@ class Boundary extends GameObject
         const color = Color.HexStringToColor(colorString).color
         this.walls.push(new Rectangle(scene, -5000, 0, 10000, 100000, color))
         this.walls.push(new Rectangle(scene, 0, -5000, 100000, 10000, color))
-        this.walls.push(new Rectangle(scene, 0, normalizedSize.x * Constants.CELL_SIZE + 5000, 100000, 10000, color))
+        this.walls.push(new Rectangle(scene, 0, normalizedSize.y * Constants.CELL_SIZE + 5000, 100000, 10000, color))
         this.walls.push(new Rectangle(scene, normalizedSize.x * Constants.CELL_SIZE + 5000, 0, 10000, 100000, color))
 
         for (let i = 0; i < this.walls.length; i++)
